@@ -10,11 +10,16 @@ This repos contains other, necessary LittleVGL software repositories as [git sub
 
 ### Get the repo and submodules
 
-This command will clone this top level repo and all submodules in a single step.
+These commands will clone this top level repo and all submodules.
 
 ```
-git clone --recurse-submodules https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
+git clone https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
+lvgl_sandbox_sim_vs
 cd lvgl_sandbox_sim_vs\visual_studio_2017_sdl
+git clone https://github.com/littlevgl/lvgl.git
+git clone https://github.com/littlevgl/lv_drivers.git
+git clone https://github.com/littlevgl/lv_apps.git
+git clone https://github.com/littlevgl/lv_examples.git
 xcopy lv_examples lv_examples-rework /e/s/h
 cd lv_examples-rework
 git switch rework
