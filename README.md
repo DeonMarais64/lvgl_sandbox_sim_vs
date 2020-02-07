@@ -14,7 +14,6 @@ These commands will clone this top level repo and all submodules.
 
 ```
 git clone https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
-lvgl_sandbox_sim_vs
 cd lvgl_sandbox_sim_vs\visual_studio_2017_sdl
 git clone https://github.com/littlevgl/lvgl.git
 git clone https://github.com/littlevgl/lv_drivers.git
