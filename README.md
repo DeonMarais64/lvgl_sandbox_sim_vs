@@ -27,7 +27,8 @@ git switch rework
 
 ## How To Build & Run
 
-Open the `lvgl_sandbox_sim_vs` solution file in Visual Studio. Click on the _Local windows Debugger_ button in the top toolbar.  The included project will be built and run, launching from a cmd window.
+Open the `lvgl_sandbox_sim_vs.sln` file in Visual Studio.
+Press F5 to build and run the project.
 
 ## Also see,
 This repo is a variation of https://github.com/littlevgl/lv_sim_visual_studio_sdl
