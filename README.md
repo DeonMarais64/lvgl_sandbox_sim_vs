@@ -20,6 +20,9 @@ git clone https://github.com/littlevgl/lv_drivers.git
 git clone https://github.com/littlevgl/lv_apps.git
 git clone https://github.com/littlevgl/lv_examples.git
 xcopy lv_examples lv_examples-rework /e/s/h
+```
+Select 'D' for directory
+```
 cd lv_examples-rework
 git switch rework
 ```
