@@ -6,7 +6,7 @@ Instructions for cloning, building and running the application are found below.
 
 ## How to Clone
 
-This repos contains other, necessary LittleVGL software repositories as [git sub-modules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  Those sub-modules are not pulled in with the basic git clone command and they will be needed.  There are a couple of ways to pull in those submodules.
+This repos contains other, necessary LittleVGL software repositories as [git sub-modules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  Those sub-modules are not pulled in with the basic git clone command and they will be needed. Please follow the sequence below.
 
 ### Get the repo and submodules
 
