@@ -68,8 +68,10 @@ int main(int argc, char** argv)
      */
 
 	//sndbx_pge_lv_test_theme_2_test();
-	sndbx_app_monolith_test();
+    //sndbx_app_hello_world();
+    //sndbx_app_monolith_test();
 	//sndbx_app_test_test();
+    sndbx_app_splash_hello();
 
 	//lv_ex_table_1();
 
