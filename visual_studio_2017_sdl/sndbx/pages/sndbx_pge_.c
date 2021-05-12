@@ -1,20 +1,20 @@
 /**
- * @file sndbx_pge_templ.c
+ * @file sndbx_pge_.c
  *
  */
 
  /*********************
   *      INCLUDES
   *********************/
-#include "sndbx_pge_templ.h"
-#if USE_SNDBX_PGE_TEMPL
+#include "sndbx_pge_.h"
+#if USE_SNDBX_PGE_
 
 #include <stdio.h>
 
 /*********************
  *      DEFINES
  *********************/
-#define PAGE_NAME "Sandbox Templ"
+#define PAGE_NAME ""
 
 #define TASK_PRIO      LV_TASK_PRIO_LOW
 #define TASK_PERIOD    400
@@ -53,7 +53,7 @@ static bool info_cb( void * p_mem, lv_event_t evt );
 /**********************
  *  GLOBAL DESCRIPTORS
  **********************/
-const sndbx_pge_dsc_t sndbx_pge_templ_dsc = {
+const sndbx_pge_dsc_t sndbx_pge__dsc = {
 	.name = PAGE_NAME,
 	.mem_size = sizeof( mem_t ),
 	.create_cb = create_cb,
@@ -66,7 +66,7 @@ const sndbx_pge_dsc_t sndbx_pge_templ_dsc = {
 	.help_cb = help_cb,
 };
 
-/**********************
+/********************** 
  *  STATIC VARIABLES
  **********************/
 
@@ -82,10 +82,10 @@ const sndbx_pge_dsc_t sndbx_pge_templ_dsc = {
 /**
  * Create a sandbox test application
  */
-void sndbx_pge_templ_test( void )
+void sndbx_pge__test( void )
 {
 	static const sndbx_pge_t page = {
-		.dsc = &sndbx_pge_templ_dsc,
+		.dsc = &sndbx_pge__dsc,
 	};
 
 	sndbx_app_create( &page );
@@ -329,4 +329,4 @@ static bool help_cb( void * p_mem, lv_event_t evt )
 	return true;
 }
 
-#endif  /*USE_SNDBX_PGE_TEMPL*/
+#endif  /*USE_SNDBX_PGE_*/

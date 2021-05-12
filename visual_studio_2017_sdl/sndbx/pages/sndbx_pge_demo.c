@@ -189,15 +189,15 @@ static const char * const priorities[_LV_TASK_PRIO_NUM] = {
  */
 void sndbx_pge_demo_test( void )
 {
-	lv_theme_t * th;
+//	lv_theme_t * th;
 //	th = lv_theme_default_init( 0, NULL );
 //	th = lv_theme_alien_init( 180, NULL );
 //	th = lv_theme_material_init( 180, NULL );
 //	th = lv_theme_mono_init( 0, NULL );
-	th = lv_theme_night_init( 210, NULL );
+//	th = lv_theme_night_init( 210, NULL );
 //	th = lv_theme_nemo_init( 180, NULL );
 //	th = lv_theme_zen_init( 180, NULL );
-	lv_theme_set_current( th );
+//	lv_theme_set_current( th );
 	sndbx_app_create( &pages[3] );
 }
 
@@ -224,7 +224,7 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	uint8_t txt_size = 128;
 	char * txt = lv_mem_alloc( txt_size );
 	lv_obj_t * lbl = lv_label_create( parent, NULL );
-	lv_task_t * disp_refr_task = lv_disp_get_refr_task( NULL );
+	lv_task_t * disp_refr_task = _lv_disp_get_refr_task( NULL );
 
 	if( pge_prms->self->task_prio == LV_TASK_PRIO_OFF )
 	{
@@ -298,7 +298,7 @@ static void task_cb( void * p_mem )
 		mem->task.txt_size = 128;
 		mem->task.txt = lv_mem_alloc( mem->task.txt_size );
 		mem->task.txt[0] = '\0';
-		lv_label_set_static_text( mem->task.lbl, mem->task.txt );
+		lv_label_set_text_static( mem->task.lbl, mem->task.txt );
 	}
 
 	lv_task_t * sndbx_task = sndbx_task_get();
@@ -311,7 +311,7 @@ static void task_cb( void * p_mem )
 		, lv_tick_elaps(mem->task.time_stamp)
 	);
 
-	lv_label_set_static_text( mem->task.lbl, NULL );
+	lv_label_set_text_static( mem->task.lbl, NULL );
 
 	mem->task.time_stamp = lv_tick_get();
 }
@@ -345,7 +345,7 @@ static void destroy_cb( void * p_mem )
 static void settings_txt_update( mem_t * mem )
 {
 	lv_task_t * sndbx_task = sndbx_task_get();
-	lv_task_t * disp_refr_task = lv_disp_get_refr_task( NULL );
+	lv_task_t * disp_refr_task = _lv_disp_get_refr_task( NULL );
 
 	snprintf( mem->settings.txt, mem->settings.txt_size, 
 		"Settings:\n"
@@ -407,7 +407,7 @@ static float exponential_constant( uint32_t per_min, uint32_t per_max, uint32_t 
 }
 static uint32_t task_period_from_slider_val( int16_t slider_val )
 {
-	lv_task_t * refr_task = lv_disp_get_refr_task( NULL );
+	lv_task_t * refr_task = _lv_disp_get_refr_task( NULL );
 	uint32_t refr_task_period = refr_task->period;
 
 	float tau = exponential_constant( refr_task_period, TASK_PERIOD_MAX, TASK_SLIDER_VAL_MAX );
@@ -418,7 +418,7 @@ static uint32_t task_period_from_slider_val( int16_t slider_val )
 }
 static int16_t task_slider_val_from_period( uint32_t period )
 { 
-	lv_task_t * refr_task = lv_disp_get_refr_task( NULL );
+	lv_task_t * refr_task = _lv_disp_get_refr_task( NULL );
 	uint32_t refr_task_period = refr_task->period;
 	float tau = exponential_constant( refr_task_period, TASK_PERIOD_MAX, TASK_SLIDER_VAL_MAX );
 
@@ -480,7 +480,7 @@ static void settings_refr_slider_event_handler( lv_obj_t * slider, lv_event_t ev
 	if( event != LV_EVENT_VALUE_CHANGED )
 		return;
 
-	lv_task_t * refr_task = lv_disp_get_refr_task( NULL );
+	lv_task_t * refr_task = _lv_disp_get_refr_task( NULL );
 	int16_t slider_val = lv_slider_get_value( slider );
 
 	uint32_t refr_period = refr_period_from_slider_val( slider_val );
@@ -530,7 +530,7 @@ static bool settings_cb( void * p_mem, lv_event_t evt )
 		mem->settings.txt_size = 128;
 		mem->settings.txt = lv_mem_alloc( mem->settings.txt_size );
 		mem->settings.txt[0] = '\0';
-		lv_label_set_static_text( mem->settings.lbl, mem->settings.txt );
+		lv_label_set_text_static( mem->settings.lbl, mem->settings.txt );
 	}
 
 	/*Create a window*/
@@ -546,48 +546,48 @@ static bool settings_cb( void * p_mem, lv_event_t evt )
 	lv_obj_set_user_data( btn_close, p_mem );
 	lv_obj_set_event_cb( btn_close, settings_win_event_handler );
 
-	lv_coord_t h = lv_obj_get_height( mem->parent ) * 1 / 2;
-	lv_coord_t w = lv_obj_get_width( mem->parent ) * 3 / 4;
+	lv_coord_t h = lv_obj_get_height( mem->parent ) * 6 / 11;
+	lv_coord_t w = lv_obj_get_width( mem->parent ) * 4 / 5;
 	lv_obj_set_size( win, w, h );
 
-#if 1
-	/*!!!Fix the rest by properly setting the correct styles */
-	lv_coord_t hh = LV_VER_RES_MAX / 10;
-	lv_win_ext_t * ext = lv_obj_get_ext_attr( win );
-	lv_obj_set_height( ext->header, hh );
-//	lv_btn_set_fit( btn_close, LV_FIT_TIGHT );
-	lv_obj_set_size( btn_close, LV_VER_RES_MAX * 3 / 20, LV_VER_RES_MAX / 10 );
-	/* The rest is done so that the page in the window uses the remaining height */
-	/* And so that the title and close button are properly aligned */
-	lv_obj_set_height( ext->page, h - hh );
-	const lv_style_t * st = lv_win_get_style( win, LV_WIN_STYLE_HEADER );
-	lv_obj_align( ext->page, ext->header, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0 );
-	lv_obj_align( ext->title, ext->header, LV_ALIGN_IN_LEFT_MID, st->body.padding.left, 0 );
-	lv_obj_align( btn_close, ext->header, LV_ALIGN_IN_RIGHT_MID, -st->body.padding.right, 0 );
-
-	/* Then if the size changes, it goes back to defaults */
-//	lv_obj_set_size( win, w*10/9, h*10/9 );
-#endif
-
 	/*Add Content*/
-	lv_win_set_layout( win, LV_LAYOUT_PRETTY );
+	lv_win_set_layout( win, LV_LAYOUT_PRETTY_MID);
 
 	lv_task_t * sndbx_task = sndbx_task_get();
 
+	/* Sliders */
+	lv_obj_t* slider;
+
+	slider = lv_slider_create(win, NULL);
+	lv_obj_set_event_cb(slider, settings_slider_event_handler);
+	lv_slider_set_range(slider, 0, TASK_SLIDER_VAL_MAX);
+	int16_t slider_val = task_slider_val_from_period(sndbx_task->period);
+	lv_slider_set_value(slider, slider_val, true);
+	lv_obj_set_user_data(slider, p_mem);
+
+	slider = lv_slider_create(win, NULL);
+	lv_obj_set_event_cb(slider, settings_refr_slider_event_handler);
+	lv_slider_set_range(slider, 0, REFR_SLIDER_VAL_MAX);
+	lv_task_t* refr_task = _lv_disp_get_refr_task(NULL);
+	slider_val = refr_slider_val_from_period(refr_task->period);
+	lv_slider_set_value(slider, slider_val, true);
+	lv_obj_set_user_data(slider, p_mem);
+
 	/* Roller */
-	lv_obj_t * roller = lv_roller_create( win, NULL );
-	lv_roller_set_options( roller,
+	lv_obj_t* roller = lv_roller_create(win, NULL);
+	lv_roller_set_options(roller,
 		"Off\n"
 		"Lowest\n"
 		"Low\n"
 		"Mid\n"
 		"High\n"
 		"Highest"
-		,LV_ROLLER_MODE_NORMAL
+		, LV_ROLLER_MODE_NORMAL
 	);
-	lv_roller_set_selected( roller, sndbx_task->prio, true );
-	lv_obj_set_user_data( roller, p_mem );
-	lv_obj_set_event_cb( roller, settings_roller_event_handler );
+	lv_roller_set_selected(roller, sndbx_task->prio, true);
+	lv_roller_set_visible_row_count(roller,2);
+	lv_obj_set_user_data(roller, p_mem);
+	lv_obj_set_event_cb(roller, settings_roller_event_handler);
 
 	/* Button */
 	lv_obj_t *btn = lv_btn_create( win, NULL );
@@ -595,24 +595,6 @@ static bool settings_cb( void * p_mem, lv_event_t evt )
 	lv_btn_set_fit( btn, LV_FIT_TIGHT );
 	lv_obj_set_user_data( btn, p_mem );
 	lv_obj_set_event_cb( btn, settings_btn_event_handler );
-
-	/* Sliders */
-	lv_obj_t * slider;
-
-	slider = lv_slider_create( win, NULL );
-	lv_obj_set_event_cb( slider, settings_slider_event_handler );
-	lv_slider_set_range( slider, 0, TASK_SLIDER_VAL_MAX );
-	int16_t slider_val = task_slider_val_from_period( sndbx_task->period );
-	lv_slider_set_value( slider, slider_val, true );
-	lv_obj_set_user_data( slider, p_mem );
-
-	slider = lv_slider_create( win, NULL );
-	lv_obj_set_event_cb( slider, settings_refr_slider_event_handler );
-	lv_slider_set_range( slider, 0, REFR_SLIDER_VAL_MAX );
-	lv_task_t * refr_task = lv_disp_get_refr_task( NULL );
-	slider_val = refr_slider_val_from_period( refr_task->period );
-	lv_slider_set_value( slider, slider_val, true );
-	lv_obj_set_user_data( slider, p_mem );
 
 	/*Finally, align window to the bottom of the page*/
 	lv_obj_align( win, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0 );
@@ -698,7 +680,7 @@ static void info_task_cb( lv_task_t * task )
 		mem->info.txt,
         "0000FF");
 #endif
-    lv_label_set_static_text(mem->info.lbl, NULL);
+    lv_label_set_text_static(mem->info.lbl, NULL);
 }
 /**
  * Called on sandbox info button events
@@ -735,50 +717,36 @@ static bool info_cb( void * p_mem, lv_event_t evt )
 	lv_obj_set_user_data( btn_close, p_mem );
 	lv_obj_set_event_cb( btn_close, info_win_event_handler );
 
-	lv_coord_t h = lv_obj_get_height( mem->parent ) * 3 / 4;
-	lv_coord_t w = lv_obj_get_width( mem->parent ) * 4 / 5;
+	lv_coord_t h = lv_obj_get_height(mem->parent) * 3 / 4;
+	lv_coord_t w = lv_obj_get_width(mem->parent) * 4 / 5;
 	lv_obj_set_size( win, w, h );
 
-#if 1
-	/*!!!Fix the rest by properly setting the correct styles */
-	lv_coord_t hh = LV_VER_RES_MAX / 10;
-	lv_win_ext_t * ext = lv_obj_get_ext_attr( win );
-	lv_obj_set_height( ext->header, hh );
-//	lv_btn_set_fit( btn_close, LV_FIT_TIGHT );
-	lv_obj_set_size( btn_close, LV_VER_RES_MAX * 3 / 20, LV_VER_RES_MAX / 10 );
-	/* The rest is done so that the page in the window uses the remaining height */
-	/* And so that the title and close button are properly aligned */
-	lv_obj_set_height( ext->page, h - hh );
-	const lv_style_t * st = lv_win_get_style( win, LV_WIN_STYLE_HEADER );
-	lv_obj_align( ext->page, ext->header, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0 );
-	lv_obj_align( ext->title, ext->header, LV_ALIGN_IN_LEFT_MID, st->body.padding.left, 0 );
-	lv_obj_align( btn_close, ext->header, LV_ALIGN_IN_RIGHT_MID, -st->body.padding.right, 0 );
-
-	/* Then if the size changes, it goes back to defaults */
-//	lv_obj_set_size( win, w*10/9, h*10/9 );
-#endif
-
 	/*Add Content*/
-	lv_win_set_layout( win, LV_LAYOUT_PRETTY );
+	lv_win_set_layout( win, LV_LAYOUT_COLUMN_MID );
+//	lv_win_set_layout( win, LV_LAYOUT_OFF );
 
     /*Create a label for the details of Memory and CPU usage*/
     mem->info.lbl = lv_label_create(win, NULL);
-	lv_label_set_static_text( mem->info.lbl, mem->info.txt );
+	lv_label_set_text_static( mem->info.lbl, mem->info.txt );
     lv_label_set_recolor(mem->info.lbl, true);
 	lv_label_set_align( mem->info.lbl, LV_LABEL_ALIGN_CENTER );
 	lv_obj_set_auto_realign( mem->info.lbl, true );
-    lv_obj_align(mem->info.lbl, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
+    lv_obj_align( mem->info.lbl, NULL, LV_ALIGN_IN_TOP_MID, 0, 0 );
 
 	/*Create a chart with two data lines*/
     mem->info.chart = lv_chart_create(win, NULL);
-//    lv_obj_set_size(mem->info.chart, w-LV_DPI/8, h-LV_DPI);
-	lv_coord_t h_w_p = lv_obj_get_height( ext->page );
+#if 0
+    lv_obj_set_size(mem->info.chart, w-LV_DPI/2, h-LV_DPI*1/2);
+	lv_obj_align(mem->info.chart, mem->info.lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+#else
+	lv_coord_t h_w_p = lv_obj_get_height(lv_win_get_content(win));
 	lv_coord_t h_lbl = lv_obj_get_height( mem->info.lbl );
-    lv_obj_set_size(mem->info.chart, w-LV_DPI/8, h_w_p-h_lbl*2);
+    lv_obj_set_size(mem->info.chart, w-LV_DPI/2, h_w_p-h_lbl*5);
+#endif
     lv_chart_set_point_count(mem->info.chart, 100);
     lv_chart_set_range(mem->info.chart, 0, 100);
     lv_chart_set_type(mem->info.chart, LV_CHART_TYPE_LINE);
-    lv_chart_set_series_width(mem->info.chart, 2);
+//    lv_chart_set_series_width(mem->info.chart, 2);
     mem->info.cpu_ser = lv_chart_add_series(mem->info.chart, LV_COLOR_RED);
     mem->info.mem_ser = lv_chart_add_series(mem->info.chart, LV_COLOR_BLUE);
 
@@ -815,7 +783,7 @@ static void help_event_handler( lv_obj_t * obj, lv_event_t evt )
 {
 	if( evt != LV_EVENT_CLICKED )
 		return;
-	lv_mbox_start_auto_close( obj, 0 );
+	lv_msgbox_start_auto_close( obj, 0 );
 
 	sndbx_help_btn_enable_set( true );
 }
@@ -834,15 +802,15 @@ static bool help_cb( void * p_mem, lv_event_t evt )
 
 	static const char * const btns[] = { "Ok", "" };
 
-	lv_obj_t * mbox = lv_mbox_create( mem->parent, NULL );
+	lv_obj_t * mbox = lv_msgbox_create( mem->parent, NULL );
 	lv_obj_set_drag( mbox, true );
-	lv_mbox_set_text( mbox,
+	lv_msgbox_set_text( mbox,
 		PAGE_NAME" help message box\n"
 		"Click on settings and info buttons\n"
 		"On the toolbar above.\n"
 		"Make changes and observe behaviour"
 	);
-	lv_mbox_add_btns( mbox, (const char**)btns );
+	lv_msgbox_add_btns( mbox, (const char**)btns );
 	lv_obj_align( mbox, NULL, LV_ALIGN_CENTER, 0, 0 );
 	lv_obj_set_top( mbox, true );
 
@@ -856,7 +824,7 @@ static bool help_cb( void * p_mem, lv_event_t evt )
 static lv_obj_t *label_create( lv_obj_t *par, const char *txt )
 {
 	lv_obj_t * lbl = lv_label_create( par, NULL );
-	lv_label_set_static_text( lbl, txt );
+	lv_label_set_text_static( lbl, txt );
 
 	return lbl;
 }

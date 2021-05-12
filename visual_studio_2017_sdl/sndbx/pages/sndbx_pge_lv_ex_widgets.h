@@ -1,10 +1,10 @@
 /**
- * @file sndbx_pge_tests.h
+ * @file sndbx_pge_ex_widgets.h
  *
  */
 
-#ifndef SNDBX_PGE_LV_TESTS_H
-#define SNDBX_PGE_LV_TESTS_H
+#ifndef SNDBX_PGE_LV_EX_WIDGETS_H
+#define SNDBX_PGE_LV_EX_WIDGETS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,10 +13,10 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-#ifndef USE_SNDBX_PGE_LV_TESTS
-#define USE_SNDBX_PGE_LV_TESTS 1
+#ifndef USE_SNDBX_PGE_LV_EX_WIDGETS
+#define USE_SNDBX_PGE_LV_EX_WIDGETS 1
 #endif
-#if USE_SNDBX_PGE_LV_TESTS
+#if USE_SNDBX_PGE_LV_EX_WIDGETS
 
 #include "../src/sndbx.h"
 
@@ -28,26 +28,33 @@ extern "C" {
  * GLOBAL DESCRIPTORS
  **********************/
 
-extern const sndbx_pge_dsc_t sndbx_pge_lv_tests_dsc;
+extern const sndbx_pge_dsc_t sndbx_pge_lv_ex_widgets_dsc;
 
 /**********************
  *      TYPEDEFS
  **********************/
+typedef struct sndbx_pge_lv_ex_widgets_prms {
+	struct {
+		const sndbx_pge_t * left;
+		const sndbx_pge_t * right;
+	} links;
+	uint8_t index;
+} sndbx_pge_lv_ex_widgets_prms_t;
 
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
 
-extern void sndbx_pge_lv_tests_test( void );
+extern void sndbx_pge_lv_ex_widgets_test( void );
 
 /**********************
  *      MACROS
  **********************/
 
-#endif /*USE_SNDBX_PGE_LV_TESTS*/
+#endif /*USE_SNDBX_PGE_LV_EX_WIDGETS*/
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* SNDBX_PGE_LV_TESTS_H */
+#endif /* SNDBX_PGE_LV_EX_WIDGETS_H */

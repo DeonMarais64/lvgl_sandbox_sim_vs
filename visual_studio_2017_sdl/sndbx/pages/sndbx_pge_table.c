@@ -21,7 +21,7 @@
 /*********************
  *      DEFINES
  *********************/
-#define PAGE_NAME "LittlevGL Table test"
+#define PAGE_NAME "LVGL Table test"
 
 #define TASK_PRIO      LV_TASK_PRIO_LOW
 #define TASK_PERIOD    250
@@ -36,13 +36,16 @@ typedef struct {
 	PCC				units;
 	PCC				pFmt;
 	_VarXT_PFN_V_	pfValueGet;
+	PCV				*pRec;		/* Pointer to record/type instance */
+	CPCV			*ppRec;		/* Pointer to pointer to record/type instance */
+	PD				offset;		/* Offset to member */
 	eVar_t			vt;
 } val_dsc_t;
 
 typedef struct {
 	lv_obj_t *table;
 	uint8_t row;
-	Var64 value;
+	Var value;
 	const val_dsc_t *val_dsc;
 } disp_val_obj_t;
 
@@ -60,6 +63,7 @@ typedef struct {
 static void create_cb( lv_obj_t * parent, void * mem, const void * prms );
 static void task_cb( void * p_mem );
 static void destroy_cb( void * p_mem );
+static bool settings_cb( void*, lv_event_t );
 
 static PCC DiState(V);
 static FP AiValue(V);
@@ -216,7 +220,7 @@ static const val_dsc_t val_si_dscs[] = {
 static const product_dsc_t product = {
 	.crc32 = 0x12345678,
 	.compileDate = __DATE__,
-	.name = "LittlevGL Simulator",
+	.name = "LVGL Simulator",
 	.application = "TFT Simulator",
 };
 
@@ -257,6 +261,7 @@ const sndbx_pge_dsc_t sndbx_pge_table_dsc = {
 	.create_cb = create_cb,
 	.task_cb = task_cb,
 	.destroy_cb = destroy_cb,
+	.settings_cb = settings_cb,
 	.task_prio = TASK_PRIO,
 	.task_period = TASK_PERIOD,
 };
@@ -290,7 +295,20 @@ static void table_set(const val_dsc_t* vd, disp_val_obj_t* dvo, lv_obj_t* table,
 		dvo->table = table;
 		dvo->row = i + 1;
 		gui_table_nsvu_set_row(dvo->table, dvo->row, dvo->val_dsc->name, ":", dvo->val_dsc->value, dvo->val_dsc->units);
-		gui_table_nsvu_set_row_align(dvo->table, dvo->row, LV_LABEL_ALIGN_RIGHT, LV_LABEL_ALIGN_CENTER, LV_LABEL_ALIGN_LEFT, LV_LABEL_ALIGN_CENTER);
+		if( dvo->val_dsc->units )
+		gui_table_nsvu_set_row_align(dvo->table, dvo->row, 
+			LV_LABEL_ALIGN_RIGHT, 
+			LV_LABEL_ALIGN_CENTER, 
+			LV_LABEL_ALIGN_LEFT, 
+//			dvo->val_dsc->units ? LV_LABEL_ALIGN_CENTER :
+			LV_LABEL_ALIGN_CENTER
+		);
+		else
+		gui_table_nsv_set_row_align(dvo->table, dvo->row, 
+			LV_LABEL_ALIGN_RIGHT, 
+			LV_LABEL_ALIGN_CENTER, 
+			LV_LABEL_ALIGN_LEFT 
+		);
 		if (!dvo->val_dsc->pfValueGet)
 			dvo->value.pcc = dvo->val_dsc->value;
 		else if(dvo->val_dsc->vt == V_CSTRING)
@@ -311,21 +329,26 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	MEM_INIT( mem, p_mem );
 	mem->parent = parent;
 
-	lv_style_t * pst;
-    lv_theme_t * th = lv_theme_get_current();
-    if(th)
-        pst = th->style.cont;
-    else
-        pst = &lv_style_pretty_color;
+//	lv_style_t * pst;
+//    lv_theme_t * th = lv_theme_get_current();
+//    if(th)
+//        pst = th->style.cont;
+//    else
+//        pst = &lv_style_pretty_color;
 
-	lv_style_copy(&mem->st_row0, &lv_style_transp_tight);
-	mem->st_row0.text.font = &font_roboto_22;
-	mem->st_row0.text.color = pst->text.color;
-	lv_style_copy(&mem->st_rows, &lv_style_transp_tight);
-	mem->st_rows.text.color = pst->text.color;
-	lv_style_t* bg = &lv_style_transp_tight,
-		* c1 = &mem->st_rows,
-		* c2 = &mem->st_row0;
+//	lv_style_copy(&mem->st_row0, &lv_style_transp_tight);
+//	mem->st_row0.text.font = &font_roboto_22;
+//	mem->st_row0.text.color = pst->text.color;
+//	lv_style_copy(&mem->st_rows, &lv_style_transp_tight);
+//	mem->st_rows.text.color = pst->text.color;
+//	lv_style_t* bg = &lv_style_transp_tight,
+//		* c1 = &mem->st_rows,
+//		* c2 = &mem->st_row0;
+
+	lv_style_t *c2 = &mem->st_row0;
+
+	lv_style_init(&mem->st_row0);
+	lv_style_set_text_font(&mem->st_row0, LV_STATE_DEFAULT, lv_theme_get_font_subtitle());
 
 	gui_table_nsvu_row_t heading = {
 		.name = "Digital Inputs",
@@ -334,8 +357,11 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	};
 	lv_obj_t* table1 = gui_table_nsvu_create(parent, &heading, NB_DISP_DSCS_DI+1);
 	lv_table_set_cell_align(table1, 0, 3, LV_LABEL_ALIGN_CENTER);
-	gui_table_set_cell_styles(table1, bg, c1, c2, NULL, NULL);
-	gui_table_nsvu_set_row_types(table1,0,2,0,2,2);
+//	gui_table_set_cell_styles(table1, bg, c1, c2, NULL, NULL);
+	gui_table_set_cell_styles(table1, NULL, NULL, c2, NULL, NULL);
+	gui_table_nsvu_set_row_types(table1,0,2,0,0,0);
+
+	lv_obj_add_style(table1, LV_TABLE_PART_CELL2, &mem->st_row0);
 
 	table_set(&val_di_dscs[0], &mem->dvo_di[0], table1, NB_DISP_DSCS_DI);
 
@@ -345,8 +371,9 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	heading.name = "Analogue Inputs";
 	lv_obj_t* table2 = gui_table_nsvu_create(parent, &heading, NB_DISP_DSCS_AI+1);
 	lv_table_set_cell_align(table2, 0, 3, LV_LABEL_ALIGN_CENTER);
-	gui_table_set_cell_styles(table2, bg, c1, c2, NULL, NULL);
-	gui_table_nsvu_set_row_types(table2,0,2,0,2,2);
+//	gui_table_set_cell_styles(table2, bg, c1, c2, NULL, NULL);
+	gui_table_set_cell_styles(table2, NULL, NULL, c2, NULL, NULL);
+	gui_table_nsvu_set_row_types(table2, 0, 2, 0, 0, 0);
 
 	table_set(&val_ai_dscs[0], &mem->dvo_ai[0], table2, NB_DISP_DSCS_AI);
 
@@ -358,26 +385,28 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	int i;
 
 	heading.name = "Digital Outputs";
-	heading.value = NULL;
-	heading.units = NULL;
-	lv_obj_t* table3 = gui_table_nsvu_create(parent, &heading, NB_DISP_DSCS_DO+1);
-	for( i=0; i<NB_DISP_DSCS_DO; ++i )
+//	heading.value = NULL;
+//	heading.units = NULL;
+	lv_obj_t* table3 = gui_table_nsv_create(parent, (gui_table_nsv_row_t*)&heading, NB_DISP_DSCS_DO+1);
+	for( i=0; i<2; ++i )
 		lv_table_set_cell_merge_right(table3, 0, i, true);
-	gui_table_set_cell_styles(table3, bg, c1, c2, NULL, NULL);
-	gui_table_nsvu_set_row_types(table3, 0, 2, 0, 2, 2);
+//	gui_table_set_cell_styles(table3, bg, c1, c2, NULL, NULL);
+	gui_table_set_cell_styles(table3, NULL, NULL, c2, NULL, NULL);
+	gui_table_nsv_set_row_types(table3, 0, 2, 2, 2);
 
 	table_set(&val_do_dscs[0], &mem->dvo_do[0], table3, NB_DISP_DSCS_DO);
 
-	gui_table_nsvu_set_col_widths(table3, LV_DPI*5/4, LV_DPI*1/6, LV_DPI*5/8, LV_DPI*1/2);
+	gui_table_nsv_set_col_widths(table3, LV_DPI*5/4, LV_DPI*1/6, LV_DPI*5/8);
 
 	lv_obj_align(table3, table1, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI/12);
 
 	heading.name = "Analogue Derived O/P's";
 	lv_obj_t* table4 = gui_table_nsvu_create(parent, &heading, NB_DISP_DSCS_AO+1);
-	for( i=0; i<NB_DISP_DSCS_AO; ++i )
+	for( i=0; i<3; ++i )
 		lv_table_set_cell_merge_right(table4, 0, i, true);
-	gui_table_set_cell_styles(table4, bg, c1, c2, NULL, NULL);
-	gui_table_nsvu_set_row_types(table4, 0, 2, 0, 2, 2);
+//	gui_table_set_cell_styles(table4, bg, c1, c2, NULL, NULL);
+	gui_table_set_cell_styles(table4, NULL, NULL, c2, NULL, NULL);
+	gui_table_nsvu_set_row_types(table4, 0, 2, 2, 2, 2);
 
 	table_set(&val_ao_dscs[0], &mem->dvo_ao[0], table4, NB_DISP_DSCS_AO);
 
@@ -387,10 +416,11 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 
 	heading.name = "Version Information";
 	lv_obj_t* table5 = gui_table_nsv_create(parent, (gui_table_nsv_row_t*)&heading, 5);
-	for(i = 0; i < 3; ++i)
+	for(i = 0; i < 2; ++i)
 		lv_table_set_cell_merge_right(table5, 0, i, true);
-	gui_table_set_cell_styles(table5, bg, c1, c2, NULL, NULL);
-	gui_table_nsv_set_row_types(table5, 0, 2, 0, 2);
+//	gui_table_set_cell_styles(table5, bg, c1, c2, NULL, NULL);
+	gui_table_set_cell_styles(table5, NULL, NULL, c2, NULL, NULL);
+	gui_table_nsv_set_row_types(table5, 0, 2, 2, 2);
 
 	gui_table_nsv_set_row_align(table5, 0, LV_LABEL_ALIGN_LEFT, LV_LABEL_ALIGN_LEFT, LV_LABEL_ALIGN_LEFT);
 
@@ -411,12 +441,13 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 
 	heading.name = "System Information";
 	lv_obj_t* table6 = gui_table_nsvu_create(parent, &heading, NB_DISP_DSCS_SI+1);
-	for(i = 0; i < NB_DISP_DSCS_SI; ++i)
+	for(i = 0; i < 3; ++i)
 		lv_table_set_cell_merge_right(table6, 0, i, true);
-	for(i = 2; i < NB_DISP_DSCS_SI; ++i)
+	for(i = 2; i < 3; ++i)
 		lv_table_set_cell_merge_right(table6, 2, i, true);
-	gui_table_set_cell_styles(table6, bg, c1, c2, NULL, NULL);
-	gui_table_nsvu_set_row_types(table6, 0, 2, 0, 2, 2);
+//	gui_table_set_cell_styles(table6, bg, c1, c2, NULL, NULL);
+	gui_table_set_cell_styles(table6, NULL, NULL, c2, NULL, NULL);
+	gui_table_nsvu_set_row_types(table6, 0, 2, 2, 2, 2);
 
 	table_set(&val_si_dscs[0], &mem->dvo_si[0], table6, NB_DISP_DSCS_SI);
 
@@ -453,7 +484,7 @@ static void task_cb( void * p_mem )
 {
 	MEM_INIT( mem, p_mem );
 
-	Var64 val;
+	Var val;
 	disp_val_obj_t* dvo = &mem->disp_val_objs[0];
 	char txt[32];
 	int i;
@@ -487,6 +518,23 @@ static void destroy_cb( void * p_mem )
 	/* Nothing else to do, parent has already been cleaned */
 	/* Memory pointed to by p_mem will be deallocated ...*/
 	/* ... by the sandbox handler */
+}
+
+static bool settings_cb(void* p_mem, lv_event_t evt)
+{
+	(void)p_mem;
+
+    if(LV_THEME_DEFAULT_INIT != lv_theme_material_init) return false;
+    if(evt == LV_EVENT_CLICKED) {
+        uint32_t flag = lv_theme_get_flags();
+		flag ^= LV_THEME_MATERIAL_FLAG_LIGHT | LV_THEME_MATERIAL_FLAG_DARK;
+
+        LV_THEME_DEFAULT_INIT(lv_theme_get_color_primary(), lv_theme_get_color_secondary(),
+                flag,
+                lv_theme_get_font_small(), lv_theme_get_font_normal(), lv_theme_get_font_subtitle(), lv_theme_get_font_title());
+    }
+
+	return false;
 }
 
 /*===================== Callbacks and Events================== */

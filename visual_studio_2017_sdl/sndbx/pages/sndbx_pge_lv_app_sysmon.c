@@ -18,7 +18,7 @@
 #if LV_HOR_RES_MAX < 800
 #define PAGE_NAME "lv App #ff0000 Sysmon# - Managed"
 #else
-#define PAGE_NAME "LittlevGL App #ff0000 Sysmon# - Managed version"
+#define PAGE_NAME "LVGL App #ff0000 Sysmon# - Managed version"
 #endif
 
 #define CPU_LABEL_COLOR    "FF0000"
@@ -108,7 +108,7 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
     lv_chart_set_point_count(mem->chart, CHART_POINT_NUM);
     lv_chart_set_range(mem->chart, 0, 100);
     lv_chart_set_type(mem->chart, LV_CHART_TYPE_LINE);
-    lv_chart_set_series_width(mem->chart, 2);
+//    lv_chart_set_series_width(mem->chart, 2);
     mem->cpu_ser =  lv_chart_add_series(mem->chart, LV_COLOR_RED);
     mem->mem_ser =  lv_chart_add_series(mem->chart, LV_COLOR_BLUE);
 

@@ -233,7 +233,7 @@ static void settings_event_handler( lv_obj_t * obj, lv_event_t evt )
 {
 	if( evt != LV_EVENT_CLICKED )
 		return;
-	lv_mbox_start_auto_close( obj, 0 );
+	lv_msgbox_start_auto_close( obj, 0 );
 
 	void * p_mem = lv_obj_get_user_data( obj );
 	MEM_INIT( mem, p_mem );
@@ -258,17 +258,17 @@ static bool settings_cb( void * p_mem, lv_event_t evt )
 
 	static const char * btns[] = { "Ok", "" };
 
-	lv_obj_t * mbox = lv_mbox_create( mem->parent, NULL );
-	lv_obj_set_drag( mbox, true );
-	lv_mbox_set_text( mbox,
+	lv_obj_t * msgbox = lv_msgbox_create( mem->parent, NULL );
+	lv_obj_set_drag( msgbox, true );
+	lv_msgbox_set_text( msgbox,
 		"Template page settings message box\n" 
 		"Some settings here\n"
 	);
-	lv_mbox_add_btns( mbox, btns );
-	lv_obj_align( mbox, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0 );
+	lv_msgbox_add_btns( msgbox, btns );
+	lv_obj_align( msgbox, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0 );
 
-	lv_obj_set_event_cb( mbox, settings_event_handler );
-	lv_obj_set_user_data( mbox, p_mem );
+	lv_obj_set_event_cb( msgbox, settings_event_handler );
+	lv_obj_set_user_data( msgbox, p_mem );
 
 	return true;
 }
@@ -283,7 +283,7 @@ static void info_event_handler( lv_obj_t * obj, lv_event_t evt )
 {
 	if( evt != LV_EVENT_CLICKED )
 		return;
-	lv_mbox_start_auto_close( obj, 0 );
+	lv_msgbox_start_auto_close( obj, 0 );
 
 	void * p_mem = lv_obj_get_user_data( obj );
 	MEM_INIT( mem, p_mem );
@@ -307,16 +307,16 @@ static bool info_cb( void * p_mem, lv_event_t evt )
 
 	static const char * btns[] = { "Ok", "" };
 
-	lv_obj_t * mbox = lv_mbox_create( mem->parent, NULL );
-	lv_obj_set_drag( mbox, true );
-	lv_mbox_set_text( mbox,
+	lv_obj_t * msgbox = lv_msgbox_create( mem->parent, NULL );
+	lv_obj_set_drag( msgbox, true );
+	lv_msgbox_set_text( msgbox,
 		"Template page info message box\n"
 		"Some information here\n"
 	);
-	lv_mbox_add_btns( mbox, btns );
-	lv_obj_align( mbox, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0 );
-	lv_obj_set_event_cb( mbox, info_event_handler );
-	lv_obj_set_user_data( mbox, p_mem );
+	lv_msgbox_add_btns( msgbox, btns );
+	lv_obj_align( msgbox, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0 );
+	lv_obj_set_event_cb( msgbox, info_event_handler );
+	lv_obj_set_user_data( msgbox, p_mem );
 
 	return true;
 }
@@ -331,7 +331,7 @@ static void help_event_handler( lv_obj_t * obj, lv_event_t evt )
 {
 	if( evt != LV_EVENT_CLICKED )
 		return;
-	lv_mbox_start_auto_close( obj, 0 );
+	lv_msgbox_start_auto_close( obj, 0 );
 
 	void * p_mem = lv_obj_get_user_data( obj );
 	MEM_INIT( mem, p_mem );
@@ -355,17 +355,17 @@ static bool help_cb( void * p_mem, lv_event_t evt )
 
 	static const char * btns[] = { "Ok", "" };
 
-	lv_obj_t * mbox = lv_mbox_create( mem->parent, NULL );
-	lv_obj_set_drag( mbox, true );
-	lv_mbox_set_text( mbox,
+	lv_obj_t * msgbox = lv_msgbox_create( mem->parent, NULL );
+	lv_obj_set_drag( msgbox, true );
+	lv_msgbox_set_text( msgbox,
 		"Template page help message box\n" 
 		"Some help here\n"
 	);
-	lv_mbox_add_btns( mbox, btns );
-	lv_obj_align( mbox, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 0 );
+	lv_msgbox_add_btns( msgbox, btns );
+	lv_obj_align( msgbox, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 0 );
 
-	lv_obj_set_event_cb( mbox, help_event_handler );
-	lv_obj_set_user_data( mbox, p_mem );
+	lv_obj_set_event_cb( msgbox, help_event_handler );
+	lv_obj_set_user_data( msgbox, p_mem );
 
 	return true;
 }

@@ -95,7 +95,7 @@ static const anim_path_dsc_t anim_path_dscs[] = {
 	{.name = "Ease in out",.path_cb = lv_anim_path_ease_in_out},
 	{.name = "Overshoot",.path_cb = lv_anim_path_overshoot},
 	{.name = "Bounce",.path_cb = lv_anim_path_bounce},
-	{.name = "Custom",.path_cb = lv_anim_path_custom},
+//	{.name = "Custom",.path_cb = lv_anim_path_custom},
 };
 
 /**********************
@@ -141,23 +141,23 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 #endif
 
 	/*chart*/
-	lv_style_copy(&mem->st_chart, &lv_style_plain);
-	mem->st_chart.body.main_color = LV_COLOR_BLACK;
-	mem->st_chart.body.grad_color = LV_COLOR_BLACK;
+//	lv_style_copy(&mem->st_chart, &lv_style_plain);
+//	mem->st_chart.body.main_color = LV_COLOR_BLACK;
+//	mem->st_chart.body.grad_color = LV_COLOR_BLACK;
 
 	mem->chart = lv_chart_create(parent, NULL);
-	lv_obj_set_style(mem->chart, &mem->st_chart);
+//	lv_obj_set_style(mem->chart, &mem->st_chart);
 	lv_obj_set_user_data(mem->chart, p_mem);
 	lv_obj_set_size(mem->chart, w_par-LV_DPI*3/2, h_par-LV_DPI);
 	lv_chart_set_point_count(mem->chart, PERIOD/LV_DISP_DEF_REFR_PERIOD);
 	lv_chart_set_range(mem->chart, -1000, 11000);
 	lv_chart_set_type(mem->chart, LV_CHART_TYPE_LINE);
-	lv_chart_set_series_width(mem->chart, 1);
+//	lv_chart_set_series_width(mem->chart, 1);
 	lv_obj_align(mem->chart, NULL, LV_ALIGN_CENTER, 0, -LV_DPI/6);
 	mem->anim_ser = lv_chart_add_series(mem->chart, LV_COLOR_RED);
 
 	lv_chart_set_div_line_count(mem->chart, 5, 7);
-	lv_chart_set_margin(mem->chart, 50);
+//	lv_chart_set_margin(mem->chart, 50);
 	lv_chart_set_y_tick_length(mem->chart, 12, 6);
 	lv_chart_set_y_tick_texts(mem->chart, "110\n90\n70\n50\n30\n10\n[%]", 2, LV_CHART_AXIS_SKIP_LAST_TICK);
 

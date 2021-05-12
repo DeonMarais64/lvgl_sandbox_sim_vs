@@ -1,20 +1,21 @@
 /**
- * @file sndbx_pge_templ.c
+ * @file sndbx_pge_extentions.c
  *
  */
 
  /*********************
   *      INCLUDES
   *********************/
-#include "sndbx_pge_templ.h"
-#if USE_SNDBX_PGE_TEMPL
+#include "sndbx_pge_extentions.h"
+#if USE_SNDBX_PGE_EXTENTIONS
 
 #include <stdio.h>
+#include "../gui/gui.h"
 
 /*********************
  *      DEFINES
  *********************/
-#define PAGE_NAME "Sandbox Templ"
+#define PAGE_NAME "Obj Extentions"
 
 #define TASK_PRIO      LV_TASK_PRIO_LOW
 #define TASK_PERIOD    400
@@ -50,10 +51,15 @@ static bool help_cb( void * p_mem, lv_event_t evt );
 static bool settings_cb( void * p_mem, lv_event_t evt );
 static bool info_cb( void * p_mem, lv_event_t evt );
 
+static void btn_rs_cb(lv_obj_t *btn, lv_event_t e);
+static void btn_uds_cb(lv_obj_t* btn, lv_event_t e);
+
+//LV_EVENT_CB_DECLARE(btn_cb);
+
 /**********************
  *  GLOBAL DESCRIPTORS
  **********************/
-const sndbx_pge_dsc_t sndbx_pge_templ_dsc = {
+const sndbx_pge_dsc_t sndbx_pge_extentions_dsc = {
 	.name = PAGE_NAME,
 	.mem_size = sizeof( mem_t ),
 	.create_cb = create_cb,
@@ -82,10 +88,10 @@ const sndbx_pge_dsc_t sndbx_pge_templ_dsc = {
 /**
  * Create a sandbox test application
  */
-void sndbx_pge_templ_test( void )
+void sndbx_pge_extentions_test( void )
 {
 	static const sndbx_pge_t page = {
-		.dsc = &sndbx_pge_templ_dsc,
+		.dsc = &sndbx_pge_extentions_dsc,
 	};
 
 	sndbx_app_create( &page );
@@ -109,25 +115,89 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	/* Unpack page parameters*/
 	const sndbx_pge_prms_lr_t * pge_prms = prms;
 
-	/* Create content */
-	/* Allocate resources needed to set the page up */
-	uint8_t txt_size = 128;
-	char * txt = lv_mem_alloc( txt_size );
-	lv_obj_t * lbl = lv_label_create( parent, NULL );
-	snprintf( txt, txt_size, "Create: Created." );
+	/*+ Create content */
 
-	lv_label_set_text( lbl, txt );
-	lv_label_set_align( lbl, LV_LABEL_ALIGN_CENTER );
-	lv_obj_align( lbl, NULL, LV_ALIGN_IN_TOP_MID, 0, LV_DPI/6 );
+	lv_obj_t* ctrl_lhs = gui_ctrlmotor_uds_create(parent, btn_uds_cb);
+	lv_obj_align(ctrl_lhs, NULL, LV_ALIGN_IN_LEFT_MID, 0, 0);
 
-	/* Free allocated resources needed to set the page up */
-	lv_mem_free( txt );
 
+	lv_obj_t* ctrl_rhs = gui_ctrlmotor_rs_create(parent, btn_rs_cb);
+	lv_obj_align(ctrl_rhs, NULL, LV_ALIGN_IN_RIGHT_MID, 0, 0 );
+
+	lv_coord_t w_par = lv_obj_get_width(parent);
+	lv_coord_t h_par = lv_obj_get_height(parent);
+
+	lv_coord_t w_lhs = lv_obj_get_width(ctrl_lhs);
+
+	lv_coord_t w_tv = w_par - lv_obj_get_width(ctrl_lhs) - lv_obj_get_width(ctrl_rhs);
+	lv_coord_t h_tv = h_par;
+
+	/*+ Tileview */
+	static const lv_point_t valid_pos[] = { 
+		{0, 0}, 
+		{0, 1}, 
+		{0, 2},
+	};
+	lv_obj_t* tileview;
+	tileview = lv_tileview_create(parent, NULL);
+	lv_tileview_set_valid_positions(tileview, valid_pos, 3);
+	lv_obj_set_size(tileview, w_tv, h_tv);
+	//lv_obj_set_width(tileview, w_tv);
+	lv_tileview_set_edge_flash(tileview, true);
+	lv_obj_align(tileview, NULL, LV_ALIGN_CENTER, 0, 0);
+	//lv_tileview_set_anim_time(tileview, 0);
+
+	lv_obj_t* lbl;
+
+	/*Tile 1 */
+	lv_obj_t *tile1 = lv_obj_create(tileview, NULL);
+	lv_obj_set_size(tile1, w_tv, h_tv);
+	lv_tileview_add_element(tileview, tile1);
+
+	lbl = lv_label_create(tile1, NULL);
+	lv_label_set_text_static(lbl, "\nTile 1");
+	lv_obj_align(lbl, NULL, LV_ALIGN_CENTER, 0, 0);
+
+	/*Tile 2 */
+	lv_obj_t* tile2 = lv_obj_create(tileview, tile1);
+	lv_obj_align(tile2, tile1, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+	lv_tileview_add_element(tileview, tile2);
+
+	lbl = lv_label_create(tile2, NULL);
+	lv_label_set_text_static(lbl, "\n\nTile 2");
+	lv_obj_align(lbl, NULL, LV_ALIGN_CENTER, 0, 0);
+
+	lbl = lv_label_create(tile2, NULL);
+
+	int i;
+
+	i = lv_obj_count_children(tile2);
+
+	char str[32];
+	sprintf(str, "Tile 2\nChildren : %i", i);
+	lv_label_set_text(lbl, str);
+	lv_obj_align(lbl, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+
+	/*Tile 3 */
+	lv_obj_t* tile3 = lv_obj_create(tileview, tile2);
+	lv_obj_set_size(tile3, w_tv, h_tv);
+	lv_obj_align(tile3, tile2, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+	lv_tileview_add_element(tileview, tile3);
+
+	lbl = lv_label_create(tile3, NULL);
+	lv_label_set_text_static(lbl, "\n\n\nTile 3");
+	lv_obj_align(lbl, NULL, LV_ALIGN_CENTER, 0, 0);
+	/*- Tileview */
+
+	/*+ Task*/
 	mem->task.lbl = lv_label_create( parent, NULL );
-	lv_label_set_text( mem->task.lbl, "Task: " );
-	lv_label_set_align( mem->task.lbl, LV_LABEL_ALIGN_LEFT );
+	lv_label_set_text_static( mem->task.lbl, "" );
 	lv_obj_set_auto_realign( mem->task.lbl, true );
-	lv_obj_align( mem->task.lbl, lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 6 );
+	//lv_label_set_align( mem->task.lbl, LV_LABEL_ALIGN_LEFT );
+	//lv_obj_align( mem->task.lbl, lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 6 );
+	/*- Task*/
+
+	/*- Create content */
 
 	if( pge_prms )
 	{	/* Add links to other pages */
@@ -153,6 +223,9 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 static void task_cb( void * p_mem )
 {
 	MEM_INIT( mem, p_mem );
+
+	if (!mem->task.lbl)
+		return;
 
 	char buf[64];
 	snprintf( buf, 64,
@@ -329,4 +402,35 @@ static bool help_cb( void * p_mem, lv_event_t evt )
 	return true;
 }
 
-#endif  /*USE_SNDBX_PGE_TEMPL*/
+static void btn_rs_cb(lv_obj_t *btn, lv_event_t e)
+{
+	if (e != LV_EVENT_CLICKED)
+		return;
+	uint8_t id = gui_btn_get_id(btn);
+
+	mem_t * mem = (mem_t*)sndbx_pge_get_mem();
+	
+	switch (id) {
+	case 1: lv_label_set_text_static(mem->task.lbl, "Run pressed"); break;
+	case 2: lv_label_set_text_static(mem->task.lbl, "Stop pressed"); break;
+	default: lv_label_set_text_static(mem->task.lbl, "Unknown Event Id"); break;
+	}
+}
+
+static void btn_uds_cb(lv_obj_t* btn, lv_event_t e)
+{
+	if (e != LV_EVENT_CLICKED)
+		return;
+	uint8_t id = gui_btn_get_id(btn);
+
+	mem_t* mem = (mem_t*)sndbx_pge_get_mem();
+
+	switch (id) {
+	case 1: lv_label_set_text_static(mem->task.lbl, "Up pressed"); break;
+	case 2: lv_label_set_text_static(mem->task.lbl, "Down pressed"); break;
+	case 3: lv_label_set_text_static(mem->task.lbl, "Stop pressed"); break;
+	default: lv_label_set_text_static(mem->task.lbl, "Unknown Event Id"); break;
+	}
+}
+
+#endif  /*USE_SNDBX_PGE_EXTENTIONS*/

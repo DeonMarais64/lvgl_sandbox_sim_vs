@@ -52,7 +52,7 @@ static bool help_cb( void * p_mem, lv_event_t evt );
 
 static lv_obj_t * label_create( lv_obj_t * par, const char * txt );
 
-static void btnm_event_handler(lv_obj_t * obj, lv_event_t evt);
+static void btnmatrix_event_handler(lv_obj_t * obj, lv_event_t evt);
 
 static void save_theme(void);
 static void recover_theme(void);
@@ -161,8 +161,8 @@ void sndbx_pge_lv_apps_test( void )
 		.dsc = &sndbx_pge_lv_apps_dsc, 
 	};
 
-	theme = lv_theme_default_init(0, NULL);
-	lv_theme_set_current( theme );
+//	theme = lv_theme_default_init(0, NULL);
+//	lv_theme_set_current( theme );
 	sndbx_app_create(&page);
 }
 
@@ -189,7 +189,7 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	lv_obj_t * lbl = label_create(parent, "Please select an app to run");
 	lv_obj_align(lbl, NULL, LV_ALIGN_IN_TOP_MID, 0, LV_DPI/4 );
 
-	static const char * btnm_map[] = {
+	static const char * btnmatrix_map[] = {
 		"Demo",	"Benchmark", "\n",
 		"Settings 1", "Settings 2", "\n",
 		"Sysmon", "Terminal", "\n",
@@ -197,11 +197,11 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 		"",
 	};
 
-	lv_obj_t * btnm = lv_btnm_create(parent, NULL);
-	lv_btnm_set_map(btnm, btnm_map);
-	lv_obj_set_size(btnm, w_par * 3 / 4, h_par * 3 / 4);
-	lv_obj_align(btnm, lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 6);
-	lv_obj_set_event_cb(btnm, btnm_event_handler);
+	lv_obj_t * btnmatrix = lv_btnmatrix_create(parent, NULL);
+	lv_btnmatrix_set_map(btnmatrix, btnmatrix_map);
+	lv_obj_set_size(btnmatrix, w_par * 3 / 4, h_par * 3 / 4);
+	lv_obj_align(btnmatrix, lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 6);
+	lv_obj_set_event_cb(btnmatrix, btnmatrix_event_handler);
 
 	if( pge_prms )
 	{	/* Add links to other pages */
@@ -218,11 +218,11 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	}
 }
 
-static void btnm_event_handler(lv_obj_t * obj, lv_event_t evt)
+static void btnmatrix_event_handler(lv_obj_t * obj, lv_event_t evt)
 {
 	if (evt != LV_EVENT_CLICKED)
 		return;
-	uint16_t idx = lv_btnm_get_active_btn(obj);
+	uint16_t idx = lv_btnmatrix_get_active_btn(obj);
 	if (idx >= NB_APP_PAGES)
 		return;
 	const sndbx_pge_t *page = &app_pages[idx];
@@ -231,8 +231,8 @@ static void btnm_event_handler(lv_obj_t * obj, lv_event_t evt)
 
 void save_theme(void)
 {
-	if( !theme )
-		theme = lv_theme_get_current();
+//	if( !theme )
+//		theme = lv_theme_get_current();
 }
 
 void recover_theme(void)
@@ -275,7 +275,7 @@ static void help_event_handler( lv_obj_t * obj, lv_event_t evt )
 {
 	if( evt != LV_EVENT_CLICKED )
 		return;
-	lv_mbox_start_auto_close( obj, 0 );
+	lv_msgbox_start_auto_close( obj, 0 );
 
 	sndbx_help_btn_enable_set( true );
 }
@@ -293,16 +293,16 @@ static bool help_cb( void * p_mem, lv_event_t evt )
 
 	static const char * btns[] = { "Ok", "" };
 
-	lv_obj_t * mbox = lv_mbox_create( mem->parent, NULL );
-	lv_obj_set_drag( mbox, true );
-	lv_mbox_set_text( mbox,
+	lv_obj_t * msgbox = lv_msgbox_create( mem->parent, NULL );
+	lv_obj_set_drag( msgbox, true );
+	lv_msgbox_set_text( msgbox,
 		PAGE_NAME" help message box\n"
 		"Some help here\n"
 	);
-	lv_mbox_add_btns( mbox, btns );
-	lv_obj_align( mbox, NULL, LV_ALIGN_CENTER, 0, 0 );
+	lv_msgbox_add_btns( msgbox, btns );
+	lv_obj_align( msgbox, NULL, LV_ALIGN_CENTER, 0, 0 );
 
-	lv_obj_set_event_cb( mbox, help_event_handler );
+	lv_obj_set_event_cb( msgbox, help_event_handler );
 
 	return true;
 }
