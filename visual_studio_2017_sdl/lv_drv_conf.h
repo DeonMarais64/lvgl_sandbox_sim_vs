@@ -1,6 +1,6 @@
 /**
  * @file lv_drv_conf.h
- *
+ * Configuration file for v7.8.0
  */
 
 /*
@@ -181,6 +181,17 @@
 /*No settings*/
 #endif  /*USE_ST7565*/
 
+/*------------------------------
+ *  GC9A01 (color, low res.)
+ *-----------------------------*/
+#ifndef USE_GC9A01
+#  define USE_GC9A01          0
+#endif
+
+#if USE_GC9A01
+/*No settings*/
+#endif  /*USE_GC9A01*/
+
 /*------------------------------------------
  *  UC1610 (4 gray 160*[104|128])
  *  (EA DOGXL160 160x104 tested)
@@ -217,6 +228,20 @@
 #  define SHARP_MIP_REV_BYTE(b)         /*((uint8_t) __REV(__RBIT(b)))*/  /*Architecture / compiler dependent byte bits order reverse*/
 #endif  /*USE_SHARP_MIP*/
 
+/*-------------------------------------------------
+ *  ILI9341 240X320 TFT LCD
+ *------------------------------------------------*/
+#ifndef USE_ILI9341
+#  define USE_ILI9341       0
+#endif
+
+#if USE_ILI9341
+#  define ILI9341_HOR_RES       LV_HOR_RES
+#  define ILI9341_VER_RES       LV_VER_RES
+#  define ILI9341_GAMMA         1
+#  define ILI9341_TEARING       0
+#endif  /*USE_ILI9341*/
+
 /*-----------------------------------------
  *  Linux frame buffer device (/dev/fbx)
  *-----------------------------------------*/
@@ -239,6 +264,18 @@
 # define FBDEV_PATH		"/dev/fb0"
 #endif
 
+/*-----------------------------------------
+ *  DRM/KMS device (/dev/dri/cardX)
+ *-----------------------------------------*/
+#ifndef USE_DRM
+#  define USE_DRM           0
+#endif
+
+#if USE_DRM
+#  define DRM_CARD          "/dev/dri/card0"
+#  define DRM_CONNECTOR_ID  -1	/* -1 for the first connected one */
+#endif
+
 /*********************
  *  INPUT DEVICES
  *********************/
@@ -258,7 +295,9 @@
 #  define XPT2046_X_MAX       3800
 #  define XPT2046_Y_MAX       3800
 #  define XPT2046_AVG         4
-#  define XPT2046_INV         0
+#  define XPT2046_X_INV       0
+#  define XPT2046_Y_INV       0
+#  define XPT2046_XY_SWAP     0
 #endif
 
 /*-----------------

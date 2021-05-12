@@ -54,6 +54,34 @@
 /*Touch pad calibration with 4 points*/
 #define LV_USE_TPCAL       1
 
+/*********************
+ * DEMO USAGE
+ *********************/
+
+/*Show some widget*/
+#define LV_USE_DEMO_WIDGETS        1
+#if LV_USE_DEMO_WIDGETS
+#define LV_DEMO_WIDGETS_SLIDESHOW  0
+#endif
+
+/*Printer demo, optimized for 800x480*/
+#define LV_USE_DEMO_PRINTER     1
+
+/*Demonstrate the usage of encoder and keyboard*/
+#define LV_USE_DEMO_KEYPAD_AND_ENCODER     1
+
+/*Benchmark your system*/
+#define LV_USE_DEMO_BENCHMARK   1
+
+/*Stress test for LVGL*/
+#define LV_USE_DEMO_STRESS      1
+
+/*Music player for LVGL*/
+#define LV_USE_DEMO_MUSIC      1
+#if LV_USE_DEMO_MUSIC
+#define LV_DEMO_MUSIC_AUTO_PLAY 0
+#endif
+
 #endif /*LV_EX_CONF_H*/
 
 #endif /*End of "Content enable"*/
