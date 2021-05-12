@@ -12,16 +12,6 @@ This repos contains other, necessary LVGL software repositories as [git sub-modu
 
 These commands will clone this top level repo and all submodules and prepare them,
 
-### All at Once
-```
-git clone --recurse-submodules https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
-```
-### Main Repository First, Submodules Second
-```
-git clone https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
-cd lvgl_sandbox_sim_vs
-git submodule update --init --recursive
-```
 ### One at a time the long way
 ```
 git clone https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
