@@ -1,10 +1,9 @@
 /**
- * @file gui.h
+ * @file gui_control_motor.h
  *
  */
-#ifndef GUI_H
-#define GUI_H
-
+#ifndef GUI_CONTROL_MOTOR_H
+#define GUI_CONTROL_MOTOR_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,15 +12,16 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
+#if 0 && defined LV_CONF_INCLUDE_SIMPLE
+#include "lvgl.h"
+#else
+#include "lvgl/lvgl.h"
+#endif
 
-#include "gui_btn.h"
-#include "gui_table.h"
-#include "gui_control_motor.h"
 
 /*********************
  *      DEFINES
  *********************/
-#define GUI_RECOLOR(txt,color)  LV_TXT_COLOR_CMD color " " txt LV_TXT_COLOR_CMD
 
 /**********************
  *      TYPEDEFS
@@ -30,6 +30,9 @@ extern "C" {
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
+
+lv_obj_t* gui_ctrlmotor_rs_create(lv_obj_t* par, lv_event_cb_t event_cb);
+lv_obj_t* gui_ctrlmotor_uds_create(lv_obj_t* par, lv_event_cb_t event_cb);
 
 /**********************
  *      MACROS
@@ -40,4 +43,4 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-#endif /*GUI_H*/
+#endif /*GUI_CONTROL_MOTOR_H*/
