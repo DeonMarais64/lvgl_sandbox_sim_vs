@@ -1,30 +1,40 @@
 # LittlevGL Sandbox - PC Simulator using Visual Studio 2017/2019
 
-This is a pre-configured Visual Studio project to try LittlevGL on a Windows PC. The project uses the [SDL](https://www.libsdl.org/) library which is copied and linked to the project, so you can compile it without any extra dependencies. The 64 bit libraries are used so it will work out-of-the-box on 64-bit systems.
+This is a pre-configured Visual Studio project to try LGL on a Windows PC. The project uses the [SDL](https://www.libsdl.org/) library which is copied and linked to the project, so you can compile it without any extra dependencies. The 64 bit libraries are used so it will work out-of-the-box on 64-bit systems.
 
 Instructions for cloning, building and running the application are found below.
 
 ## How to Clone
 
-This repos contains other, necessary LittleVGL software repositories as [git sub-modules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  Those sub-modules are not pulled in with the basic git clone command and they will be needed. Please follow the sequence below.
+This repos contains other, necessary LVGL software repositories as [git sub-modules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  Those sub-modules are not pulled in with the basic git clone command and they will be needed. Please follow the sequence below.
 
 ### Get the repo and submodules
 
-These commands will clone this top level repo and all submodules.
+These commands will clone this top level repo and all submodules and prepare them,
 
+### All at Once
+```
+git clone --recurse-submodules https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
+```
+### Main Repository First, Submodules Second
+```
+git clone https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
+cd lvgl_sandbox_sim_vs
+git submodule update --init --recursive
+```
+### One at a time the long way
 ```
 git clone https://github.com/DeonMarais64/lvgl_sandbox_sim_vs.git
 cd lvgl_sandbox_sim_vs\visual_studio_2017_sdl
-git clone https://github.com/littlevgl/lvgl.git
-git clone https://github.com/littlevgl/lv_drivers.git
-git clone https://github.com/littlevgl/lv_apps.git
-git clone https://github.com/littlevgl/lv_examples.git
-xcopy lv_examples lv_examples-rework /e/s/h
-```
-Select 'D' for directory
-```
-cd lv_examples-rework
-git switch rework
+git clone https://github.com/lvgl/lvgl.git
+git clone https://github.com/lvgl/lv_drivers.git
+git clone https://github.com/lvgl/lv_examples.git
+cd lvgl
+git switch release/v7
+cd ..\lv_drivers
+git switch release/v7
+cd ..\lv_examples
+git switch release/v7
 ```
 
 ## How To Build & Run
