@@ -30,9 +30,9 @@ time_t RTC_TimeRecToTime ( TimeRec *pTr )
     struct tm ansiiTime;
 
     LoadDateStruct( &ansiiTime, pTr->year, pTr->month, pTr->day );
-    _time  = (DateToDayNumber( &ansiiTime) - CAL_DAYS_AT_1970) * 86400;
+    _time  = (((time_t)DateToDayNumber(&ansiiTime) - CAL_DAYS_AT_1970) * 86400l);
 
-    _time += pTr->hour * 3600 + pTr->min * 60 + pTr->sec;
+    _time += (time_t)3600 * pTr->hour + (time_t)60  * pTr->min + pTr->sec;
 
     return _time;
 }
@@ -41,7 +41,7 @@ time_t RTC_TimeRecToTimeOffset ( TimeRec *pTr )
 {
 	time_t _time;
 
-	_time = pTr->day * 86400 + pTr->hour * 3600ul + pTr->min * 60 + pTr->sec;
+	_time = (time_t)86400*pTr->day + (time_t)3600*pTr->hour + (time_t)60*pTr->min + pTr->sec;
 
 	return _time;
 }
@@ -70,12 +70,12 @@ V RTC_TimeOffsetToTimeRec ( time_t tOffset, TimeRec * pTr )
 	pTr->year = 0;
 	pTr->month = 0;
 	dt = ldiv( (long)tOffset, 86400 );
-	pTr->day = dt.quot > 255 ? 255 : dt.quot;
+	pTr->day = (U8)(dt.quot > 255 ? 255 : dt.quot);
 	dt = ldiv( dt.rem, 3600 );
-	pTr->hour = dt.quot;
+	pTr->hour = (U8)dt.quot;
 	dt = ldiv( dt.rem, 60 );
-	pTr->min  = dt.quot;
-	pTr->sec  = dt.rem;
+	pTr->min  = (U8)dt.quot;
+	pTr->sec  = (U8)dt.rem;
 	pTr->ms   = 0;
 }
 
@@ -158,7 +158,7 @@ FP64 RTC_TimeNow_D_HMSsss ( V )
 
     LoadDateStruct( &ansiiTime, tr.year, tr.month, tr.day);
 
-    timeNow_D_HMSsss = (DateToDayNumber( &ansiiTime)+2 - CAL_DAYS_AT_1900) +
+    timeNow_D_HMSsss = ((time_t)DateToDayNumber(&ansiiTime)+2 - CAL_DAYS_AT_1900) +
                        (tr.hour * 3600000.0 +  tr.min * 60000.0 + tr.sec*1000.0 + tr.ms) /
                        86400000.0;
 
@@ -279,11 +279,11 @@ PC RTC_MakeTimeStringTimeRec ( RTC_TIMESTRING_OPTS tso, RTC_TimeString_t * pTs, 
 		{
 			PC pds = tso == TSO_UPTIME ? "" : "d ";
 
-			U32 uptime;
+            UL uptime;
 			if( pTr )
-				uptime = RTC_TimeRecToTime( pTr );
+				uptime = (UL)RTC_TimeRecToTime( pTr );
 			else
-				uptime = upTime;
+				uptime = (UL)upTime;
 
 			UI days = uptime / 86400u;
 			uptime -= days * 86400u;
@@ -364,8 +364,24 @@ RTC Depricated functions
 */
 S64 RTC_DateTime_BCD ( TimeRec * tr )
 {
-    return 10000000000000ull * tr->year + 100000000000ull * tr->month + 1000000000ull * tr->day +
-                 10000000ul  * tr->hour +       100000ul  * tr->min   +       1000u   * tr->sec + tr->ms;
+    return
+#if 0
+        10000000000000ull * tr->year + 
+        100000000000ull * tr->month + 
+        1000000000ull * tr->day +
+        10000000ull * tr->hour +
+        100000ull * tr->min   +
+        1000ull * tr->sec +
+        tr->ms;
+#else
+        10000000000000 * tr->year +
+        100000000000 * tr->month +
+        1000000000ll * tr->day +
+        10000000ll * tr->hour +
+        100000ll * tr->min +
+        1000ll * tr->sec +
+        tr->ms;
+#endif
 }
 
 S64 RTC_DateTimeNow_BCD ( V )

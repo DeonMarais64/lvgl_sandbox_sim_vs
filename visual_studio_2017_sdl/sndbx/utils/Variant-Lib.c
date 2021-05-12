@@ -158,7 +158,7 @@ I Var_StrToVar ( PCC str, VarP vp, eVar_t vt )
 	return retVal;
 }
 
-I Var_VarToStr ( PC s, PCC pFmt, PCVar64 pv, eVar_t vt )
+I Var_VarToStr ( PC s, PCC pFmt, PCVar pv, eVar_t vt )
 {
 	switch( vt )
 	{
@@ -228,7 +228,7 @@ I Var_VarToStr ( PC s, PCC pFmt, PCVar64 pv, eVar_t vt )
 	}
 }
 
-I Var_VarToStrn ( PC s, PCC pFmt, PCVar64 pv, ST n, eVar_t vt )
+I Var_VarToStrn ( PC s, PCC pFmt, PCVar pv, ST n, eVar_t vt )
 {
 	switch( vt )
 	{
@@ -302,7 +302,7 @@ I Var_VarToStrn ( PC s, PCC pFmt, PCVar64 pv, ST n, eVar_t vt )
 	}
 }
 
-V Var_AssignVar ( PV pvTo, PCVar64 pvFr, eVar_t vt )
+V Var_AssignVar ( PV pvTo, PCVar pvFr, eVar_t vt )
 {
 	if (!pvTo || !pvFr)
 		return;
@@ -356,6 +356,12 @@ V Var_AssignVar ( PV pvTo, PCVar64 pvFr, eVar_t vt )
 		case V_TIME:
 			*(time_t*)pvTo = pvFr->time;
 		break;
+		case V_TIME32:
+			*(__time32_t*)pvTo = pvFr->time32;
+			break;
+		case V_TIME64:
+			*(__time64_t*)pvTo = pvFr->time64;
+			break;
 		case V_CSTRING:
 			*(PCC*)pvTo = pvFr->pcc;
 		break;
@@ -364,45 +370,47 @@ V Var_AssignVar ( PV pvTo, PCVar64 pvFr, eVar_t vt )
 	}
 }
 
-V Var_AssignVarFrFun ( PV pv, _VarXT_PFN_V_ pFun, eVar_t vt )
+V Var_AssignVarFrFun ( PV pvTo, _VarXT_PFN_V_ pFun, eVar_t vt )
 {
-	if( !pv || !pFun )
+	if( !pvTo || !pFun )
 		return;
 
 	switch( vt )
 	{
-		case V_B:		*(PB)pv	= ((_B_PFN_V_)pFun)();			break;
-		case V_C:		*(PC)pv = ((_C_PFN_V_)pFun)();			break;
-		case V_SC:		*(PSC)pv = ((_SC_PFN_V_)pFun)();		break;
-		case V_S8:		*(PS8)pv = ((_S8_PFN_V_)pFun)();		break;
-		case V_UC:		*(PUC)pv = ((_UC_PFN_V_)pFun)();		break;
-		case V_U8:		*(PU8)pv = ((_U8_PFN_V_)pFun)();		break;
-		case V_SS:		*(PSS)pv = ((_SS_PFN_V_)pFun)();		break;
-		case V_S16:		*(PS16)pv = ((_S16_PFN_V_)pFun)();		break;
-		case V_US:		*(PUS)pv = ((_US_PFN_V_)pFun)();		break;
-		case V_U16:		*(PU16)pv = ((_U16_PFN_V_)pFun)();		break;
-		case V_SI:		*(PSI)pv = ((_SI_PFN_V_)pFun)();		break;
-		case V_UI:		*(PUI)pv = ((_UI_PFN_V_)pFun)();		break;
-		case V_SL:		*(PSL)pv = ((_SL_PFN_V_)pFun)();		break;
-		case V_S32:		*(PS32)pv = ((_S32_PFN_V_)pFun)();		break;
-		case V_UL:		*(PUL)pv = ((_UL_PFN_V_)pFun)();		break;
-		case V_U32:		*(PU32)pv = ((_U32_PFN_V_)pFun)();		break;
-		case V_SLL:		*(PSLL)pv = ((_SLL_PFN_V_)pFun)();		break;
-		case V_S64:		*(PS64)pv = ((_S64_PFN_V_)pFun)();		break;
-		case V_ULL:		*(PULL)pv = ((_ULL_PFN_V_)pFun)();		break;
-		case V_U64:		*(PU64)pv = ((_U64_PFN_V_)pFun)();		break;
-		case V_FP:		*(PFP)pv = ((_FP_PFN_V_)pFun)();		break;
-		case V_FP32:	*(PFP32)pv = ((_FP32_PFN_V_)pFun)();	break;
-		case V_FP64:	*(PFP64)pv = ((_FP64_PFN_V_)pFun)();	break;
-		case V_TIME:	*(time_t*)pv = ((_time_t_PFN_V_)pFun)();break;
-		case V_STRING:	*(PC*)pv = ((_PC_PFN_V_)pFun)();		break;
-		case V_CSTRING:	*(PCC*)pv = ((_PCC_PFN_V_)pFun)();		break;
+		case V_B:		*(PB)pvTo	= ((_B_PFN_V_)pFun)();			break;
+		case V_C:		*(PC)pvTo = ((_C_PFN_V_)pFun)();			break;
+		case V_SC:		*(PSC)pvTo = ((_SC_PFN_V_)pFun)();		break;
+		case V_S8:		*(PS8)pvTo = ((_S8_PFN_V_)pFun)();		break;
+		case V_UC:		*(PUC)pvTo = ((_UC_PFN_V_)pFun)();		break;
+		case V_U8:		*(PU8)pvTo = ((_U8_PFN_V_)pFun)();		break;
+		case V_SS:		*(PSS)pvTo = ((_SS_PFN_V_)pFun)();		break;
+		case V_S16:		*(PS16)pvTo = ((_S16_PFN_V_)pFun)();		break;
+		case V_US:		*(PUS)pvTo = ((_US_PFN_V_)pFun)();		break;
+		case V_U16:		*(PU16)pvTo = ((_U16_PFN_V_)pFun)();		break;
+		case V_SI:		*(PSI)pvTo = ((_SI_PFN_V_)pFun)();		break;
+		case V_UI:		*(PUI)pvTo = ((_UI_PFN_V_)pFun)();		break;
+		case V_SL:		*(PSL)pvTo = ((_SL_PFN_V_)pFun)();		break;
+		case V_S32:		*(PS32)pvTo = ((_S32_PFN_V_)pFun)();		break;
+		case V_UL:		*(PUL)pvTo = ((_UL_PFN_V_)pFun)();		break;
+		case V_U32:		*(PU32)pvTo = ((_U32_PFN_V_)pFun)();		break;
+		case V_SLL:		*(PSLL)pvTo = ((_SLL_PFN_V_)pFun)();		break;
+		case V_S64:		*(PS64)pvTo = ((_S64_PFN_V_)pFun)();		break;
+		case V_ULL:		*(PULL)pvTo = ((_ULL_PFN_V_)pFun)();		break;
+		case V_U64:		*(PU64)pvTo = ((_U64_PFN_V_)pFun)();		break;
+		case V_FP:		*(PFP)pvTo = ((_FP_PFN_V_)pFun)();		break;
+		case V_FP32:	*(PFP32)pvTo = ((_FP32_PFN_V_)pFun)();	break;
+		case V_FP64:	*(PFP64)pvTo = ((_FP64_PFN_V_)pFun)();	break;
+		case V_TIME:	*(time_t*)pvTo = ((_time_t_PFN_V_)pFun)(); break;
+		case V_TIME32:	*(__time32_t*)pvTo = ((___time32_t_PFN_V_)pFun)(); break;
+		case V_TIME64:	*(__time64_t*)pvTo = ((___time64_t_PFN_V_)pFun)(); break;
+		case V_STRING:	*(PC*)pvTo = ((_PC_PFN_V_)pFun)();		break;
+		case V_CSTRING:	*(PCC*)pvTo = ((_PCC_PFN_V_)pFun)();		break;
 		default:
 		break;
 	}
 }
 
-I Var_VarCmp ( PCVar64 pv1, PCVar64 pv2, eVar_t vt )
+I Var_VarCmp ( PCVar pv1, PCVar pv2, eVar_t vt )
 {
 	if( !pv1 || !pv2 )
 		return 0;
@@ -453,6 +461,15 @@ I Var_VarCmp ( PCVar64 pv1, PCVar64 pv2, eVar_t vt )
 #endif
 		case V_FP64:
 			size = sizeof(FP64);
+		break;
+		case V_TIME:
+			size = sizeof(time_t);
+		break;
+		case V_TIME32:
+			size = sizeof(__time32_t);
+		break;
+		case V_TIME64:
+			size = sizeof(__time64_t);
 		break;
 		case V_STRING:
 		case V_CSTRING:

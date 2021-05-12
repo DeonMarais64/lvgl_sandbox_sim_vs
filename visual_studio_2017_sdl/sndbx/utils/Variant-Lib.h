@@ -20,10 +20,10 @@
 typedef PV _VarXT_PFN_V_;
 
 extern I Var_StrToVar		( PCC s, VarP vp, eVar_t vt );
-extern I Var_VarToStr		( PC s, PCC pFmt, PCVar64 pv, eVar_t vt );
-extern I Var_VarToStrn 		( PC s, PCC pFmt, PCVar64 pv, ST n, eVar_t vt );
-extern V Var_AssignVar		( PV pvTo, PCVar64 pvFr, eVar_t vt );
+extern I Var_VarToStr		( PC s, PCC pFmt, PCVar pv, eVar_t vt );
+extern I Var_VarToStrn 		( PC s, PCC pFmt, PCVar pv, ST n, eVar_t vt );
+extern V Var_AssignVar		( PV pvTo, PCVar pvFr, eVar_t vt );
 extern V Var_AssignVarFrFun	( PV pv, _VarXT_PFN_V_ pFun, eVar_t vt );
-extern I Var_VarCmp			( PCVar64 pv1, PCVar64 pv2, eVar_t vt );
+extern I Var_VarCmp			( PCVar pv1, PCVar pv2, eVar_t vt );
 
 #endif /* VARIANT_LIB_H_ */

@@ -89,6 +89,8 @@ typedef PC		(*_PC_PFN_V_)				( V );
 typedef PCC		(*_PCC_PFN_V_)				( V );
 
 typedef time_t	(*_time_t_PFN_V_)			( V );
+typedef __time32_t	(*___time32_t_PFN_V_)	( V );
+typedef __time64_t	(*___time64_t_PFN_V_)	( V );
 
 typedef FP		(*_FP_PFN_V_)				( V );
 typedef FP32	(*_FP32_PFN_V_)				( V );
