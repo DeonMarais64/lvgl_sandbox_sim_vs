@@ -131,27 +131,31 @@ int main(int argc, char** argv)
 /*+ Sandbox Apps*/
     //sndbx_app_hello_world();
     //sndbx_app_splash_hello();
-    //sndbx_app_demo();
-    //sndbx_app_();
+    sndbx_app_demo();
     //sndbx_app_monolith_test();    /* Not yet working */
 	//sndbx_app_test_test();        /* Not yet working */
-/*- Sandbox Apps*/
+
+    //sndbx_app_();
+ /*- Sandbox Apps*/
 
 /*+ Sandbox Pages*/
-    cbe_prv_test_test();
-    //cbr_prv_test_test();
     //sndbx_pge__test();
-    //sndbx_pge_extentions_test();
     //sndbx_pge_templ_test();
     //sndbx_pge_template_test();
     //sndbx_pge_lv_app_sysmon_test();
     //sndbx_pge_table_test();
     //sndbx_pge_lv_demos_test();
     //sndbx_pge_lv_ex_style_test();
-    sndbx_pge_lv_ex_widgets_test();
+    //sndbx_pge_lv_ex_widgets_test();
 
     //sndbx_pge_demo_test();
 /*- Sandbox Pages*/
+
+/*+ Application Development */
+    //cbe_prv_test_test();
+    //cbr_prv_test_test();
+    //sndbx_pge_extentions_test();
+/*- Applications Development */
 #endif
 
 

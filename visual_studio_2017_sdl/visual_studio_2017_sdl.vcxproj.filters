@@ -1304,9 +1304,6 @@
     <ClInclude Include="lv_conf_v7.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lv_conf_v6.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sndbx\fonts\symbol_ext_def.h">
       <Filter>Header Files</Filter>
     </ClInclude>

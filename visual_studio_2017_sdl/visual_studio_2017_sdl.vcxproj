@@ -552,7 +552,6 @@
     <ClInclude Include="lvgl\tests\lv_test_core\lv_test_style.h" />
     <ClInclude Include="lvgl\tests\lv_test_objx\lv_test_cont.h" />
     <ClInclude Include="lv_conf.h" />
-    <ClInclude Include="lv_conf_v6.h" />
     <ClInclude Include="lv_conf_v7.h" />
     <ClInclude Include="lv_drivers\display\fbdev.h" />
     <ClInclude Include="lv_drivers\display\monitor.h" />
