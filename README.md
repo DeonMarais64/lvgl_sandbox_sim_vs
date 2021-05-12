@@ -25,12 +25,18 @@ cd ..\lv_drivers
 git switch release/v7
 cd ..\lv_examples
 git switch release/v7
+cd ..\..
+
 ```
 
 ## How To Build & Run
 
 Open the `lvgl_sandbox_sim_vs.sln` file in Visual Studio.
 Press F5 to build and run the project.
+
+Open main.c and try the different pages and applications by commenting / uncommenting as appropriate.
+
+Any feedback welcome.
 
 ## Also see,
 This repo is a variation of https://github.com/littlevgl/lv_sim_visual_studio_sdl
