@@ -1,12 +1,12 @@
 [submodule "visual_studio_2017_sdl/lvgl"]
 	path = visual_studio_2017_sdl/lvgl
-	url = https://github.com/littlevgl/lvgl.git
-[submodule "visual_studio_2017_sdl/lv_examples"]
-	path = visual_studio_2017_sdl/lv_examples
-	url = https://github.com/littlevgl/lv_examples.git
+	url = https://github.com/lvgl/lvgl.git
+	branch = release/v7
 [submodule "visual_studio_2017_sdl/lv_drivers"]
 	path = visual_studio_2017_sdl/lv_drivers
-	url = https://github.com/littlevgl/lv_drivers.git
-[submodule "visual_studio_2017_sdl/lv_apps"]
-	path = visual_studio_2017_sdl/lv_apps
-	url = https://github.com/littlevgl/lv_apps.git
+	url = https://github.com/lvgl/lv_drivers.git
+	branch = release/v7
+[submodule "visual_studio_2017_sdl/lv_examples"]
+	path = visual_studio_2017_sdl/lv_examples
+	url = https://github.com/lvgl/lv_examples.git
+	branch = release/v7
