@@ -19,7 +19,7 @@ extern "C" {
 #endif
 #if SNDBX_USE_SNDBX
 
-#ifdef LV_CONF_INCLUDE_SIMPLE
+#if 0 && defined LV_CONF_INCLUDE_SIMPLE
 #include "lvgl.h"
 #else
 #include "lvgl/lvgl.h"
@@ -138,10 +138,22 @@ extern void sndbx_app_create( const sndbx_pge_t * home );
 extern void sndbx_pge_change( const sndbx_pge_t * page );
 
 /**
+ * create a modal object covering the screen apart from the settings button
+ * @return object that was created.
+ */
+lv_obj_t* sndbx_obj_modal_settings_create(void);
+
+/**
  * get the active page
  * @return act pointer to current active page
  */
 extern const sndbx_pge_t *sndbx_pge_get_act(void);
+
+/**
+ * set the active page title
+ * @param page title
+ */
+extern void sndbx_pge_set_title(const char* title);
 
 /**
  * get the active page memory pointer
@@ -179,6 +191,12 @@ extern void sndbx_info_btn_enable_set( bool en );
  * @param en true: enable the settings button
  */
 extern void sndbx_settings_btn_enable_set( bool en );
+
+/**
+ * Restore parent from that previously set by sndbx_obj_modal_settings_create()
+ * @param None
+ */
+extern void sndbx_settings_btn_restore_parent(void);
 
 /**
  * get return button for the active screen, applies only to unmanaged pages

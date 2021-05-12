@@ -10,8 +10,8 @@
 #define SNDBX_USE_SNDBX 1
 
 /* Create respective buttons in the toolbar */
-#define SNDBX_USE_BTN_HELP		1
-#define SNDBX_USE_BTN_INFO		1
+#define SNDBX_USE_BTN_HELP		0
+#define SNDBX_USE_BTN_INFO		0
 #define SNDBX_USE_BTN_SETTINGS	1
 
 #define SNDBX_USE_BTNS (SNDBX_USE_BTN_HELP||SNDBX_USE_BTN_INFO||SNDBX_USE_BTN_SETTINGS)

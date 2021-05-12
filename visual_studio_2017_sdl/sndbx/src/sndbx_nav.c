@@ -129,9 +129,9 @@ static void dump_pages( const void * from )
 		"From %s,\n"
 		"  Previous : %s\n"
 		"      Next : %s\n"
-		, OUTPUT(frm)
-		, OUTPUT(prv)
-		, OUTPUT(nxt)
+		, (const char*)OUTPUT(frm)
+		, (const char*)OUTPUT(prv)
+		, (const char*)OUTPUT(nxt)
 	);
 }
 

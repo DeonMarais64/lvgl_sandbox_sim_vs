@@ -155,11 +155,58 @@ void sndbx_pge_change ( const sndbx_pge_t * page )
 	NAV_TRACE;	/*See the navigation list*/
 }
 
+lv_style_t sndbx_style_modal;
+
+/**
+ * create a modal object covering the screen apart from the settings button
+ * @return object that was created.
+ */
+lv_obj_t * sndbx_obj_modal_settings_create(void)
+{
+	lv_style_t *p_style = &sndbx_style_modal;
+
+	if(p_style->map == NULL)
+	{
+		lv_style_init(p_style);
+		lv_style_set_bg_color(p_style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+	}
+
+	lv_obj_t* obj;
+	obj = lv_obj_create(lv_scr_act(), NULL);
+	//obj = lv_obj_create(scr_sndbx_root, NULL);
+	lv_obj_reset_style_list(obj, LV_OBJ_PART_MAIN);
+	lv_obj_add_style(obj, LV_OBJ_PART_MAIN, p_style);
+	lv_obj_set_pos(obj, 0, 0);
+	lv_obj_set_size(obj, LV_HOR_RES, LV_VER_RES);
+
+	lv_obj_set_parent(btn_settings, obj);
+
+	return obj;
+}
+
+/**
+ * Restore parent from that previously set by sndbx_obj_modal_settings_create()
+ * @param None
+ */
+void sndbx_settings_btn_restore_parent(void)
+{
+	lv_obj_set_parent(btn_settings, header);
+}
+
+/**
+ * set the active page title
+ * @param page title
+ */
+void sndbx_pge_set_title(const char* title)
+{
+	lv_label_set_text(lbl_title, title);
+}
+
 /**
  * get the active page
  * @return act pointer to current active page
  */
-extern const sndbx_pge_t *sndbx_pge_get_act(void)
+const sndbx_pge_t *sndbx_pge_get_act(void)
 {
 	return page_active;
 }
@@ -249,7 +296,7 @@ void sndbx_settings_btn_enable_set( bool en )
  * get return button for the active screen, applies only to unmanaged pages
  * @return btn_return pointer to active screen return button or NULL if none
  */
-extern lv_obj_t * sndbx_return_btn_get(void)
+lv_obj_t *sndbx_return_btn_get(void)
 {
 	return btn_return;
 }
@@ -327,7 +374,17 @@ static void page_set ( const sndbx_pge_t * page )
 				page_active->dsc_u->epilogue();
 
 			if (scr_current == scr_sndbx)
+			{
+#if 0
 				lv_obj_clean(scr_sndbx);
+				//lv_obj_set_style_local_bg_color(scr_sndbx, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex3(0xf33));
+#else
+				lv_obj_del(scr_current);
+				scr_current = lv_obj_create(NULL, NULL);
+				scr_sndbx = scr_current;
+				lv_scr_load(scr_sndbx);
+#endif
+			}
 		}
 	}
 
@@ -356,7 +413,7 @@ static void page_set ( const sndbx_pge_t * page )
 	else
 		page_mem = NULL;
 	if( page->dsc->opt != SNDBX_OPT_SCREEN) /* Pointless setting a name if it is not going to be seen */
-		lv_label_set_static_text(lbl_title, page_active->dsc->name);
+		lv_label_set_text_static(lbl_title, page_active->dsc->name);
 
 	buttons_set_correct_state();
 
@@ -402,10 +459,7 @@ static void page_set_unmanaged(const sndbx_pge_t * page)
 		lv_obj_align(btn_return, NULL, page_active->dsc_u->ret_btn_align, 0, 0);
 		lv_obj_set_top(btn_return, true);
 		if (page_active->dsc_u->ret_btn_opa_scale < LV_OPA_COVER)
-		{
-			lv_obj_set_opa_scale_enable(btn_return, true);
-			lv_obj_set_opa_scale(btn_return, page_active->dsc_u->ret_btn_opa_scale);
-		}
+			lv_obj_set_style_local_opa_scale(btn_return, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, page_active->dsc_u->ret_btn_opa_scale);
 	}
 	else
 #endif		
@@ -416,6 +470,8 @@ static void page_set_unmanaged(const sndbx_pge_t * page)
 		page_active->dsc_u->post_app(NULL);
 }
 
+#define LV_BTN_STATE_INA LV_BTN_STATE_DISABLED
+#define LV_BTN_STATE_REL LV_BTN_STATE_RELEASED
 static void buttons_set_correct_state ( void )
 {
 	const void *prev, *next;
@@ -492,7 +548,7 @@ static void buttons_set_correct_state ( void )
  */
 static void btn_event_handler( lv_obj_t *btn, lv_event_t evt )
 {
-	nav_t id = (nav_t)lv_obj_get_user_data( btn );
+	nav_t id = (nav_t)(intptr_t)lv_obj_get_user_data( btn );
 
 #if SNDBX_USE_BTNS
 	switch( id ) {
@@ -592,8 +648,10 @@ static void header_create ( lv_obj_t *par )
 	align = LV_ALIGN_OUT_LEFT_MID;
 #endif
 #if	SNDBX_USE_BTN_SETTINGS
-	btn_settings = btn_create( header, LV_SYMBOL_SETTINGS, NAV_SETTINGS );
+//	btn_settings = btn_create( header, LV_SYMBOL_SETTINGS, NAV_SETTINGS );
+	btn_settings = btn_create( header, LV_SYMBOL_LIST, NAV_SETTINGS );
 	lv_obj_align( btn_settings, base, align, 0, 0 );
+
 #endif
 #endif
 }
@@ -616,7 +674,7 @@ static void body_create ( lv_obj_t *par )
 static lv_obj_t *label_create( lv_obj_t *par, const char *txt )
 {
 	lv_obj_t * lbl = lv_label_create( par, NULL );
-	lv_label_set_static_text( lbl, txt );
+	lv_label_set_text_static( lbl, txt );
 
 	return lbl;
 }
@@ -653,11 +711,10 @@ static lv_obj_t *btn_create ( lv_obj_t *par, const char *txt, nav_t id )
 	lv_btn_set_ink_out_time( btn, 500 );
 #endif
 #if 1
-//	lv_coord_t w_par = lv_obj_get_width( par );
 	lv_coord_t h_par = lv_obj_get_height( par );
-//	lv_obj_set_size( btn, h_par*3/2, h_par );
-	lv_obj_set_width( btn, h_par*3/2 );
-	lv_obj_set_height( btn, h_par );
+	lv_obj_set_size( btn, h_par*3/2, h_par );
+	//lv_obj_set_width( btn, h_par*3/2 );
+	//lv_obj_set_height( btn, h_par );
 #else
 	lv_btn_set_fit( btn, LV_FIT_TIGHT );
 #endif
