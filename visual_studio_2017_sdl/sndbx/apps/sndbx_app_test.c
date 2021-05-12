@@ -38,7 +38,7 @@ typedef struct {
  **********************/
 static void create_cb( lv_obj_t * parent, void * mem, const void * prms );
 
-static void btnm_event_handler(lv_obj_t * obj, lv_event_t evt);
+static void btnmatrix_event_handler(lv_obj_t * obj, lv_event_t evt);
 
 static lv_obj_t * label_create( lv_obj_t * par, const char * txt );
 
@@ -103,9 +103,9 @@ void sndbx_app_test_test( void )
 		.dsc = &dsc,
 	};
 
-	lv_theme_t* th;
-	th = lv_theme_default_init(0, NULL);
-	lv_theme_set_current(th);
+//	lv_theme_t* th;
+//	th = lv_theme_default_init(0, NULL);
+//	lv_theme_set_current(th);
 	sndbx_app_create(&page);
 }
 
@@ -113,11 +113,11 @@ void sndbx_app_test_test( void )
  *   STATIC FUNCTIONS
  **********************/
 
-static void btnm_event_handler( lv_obj_t * obj, lv_event_t evt )
+static void btnmatrix_event_handler( lv_obj_t * obj, lv_event_t evt )
 {
 	if( evt != LV_EVENT_CLICKED )
 		return;
-	uint16_t idx = lv_btnm_get_active_btn( obj );
+	uint16_t idx = lv_btnmatrix_get_active_btn( obj );
 	if (idx >= NB_APP_PAGES)
 		return;
 	const sndbx_pge_t *page = &app_pages[idx];
@@ -138,7 +138,7 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	uint8_t txt_size = 128;
 	char * txt = lv_mem_alloc( txt_size );
 	lv_obj_t * lbl;
-	lv_obj_t * btnm;
+	lv_obj_t * btnmatrix;
 
 	lv_coord_t w_par = lv_obj_get_width( parent );
 	lv_coord_t h_par = lv_obj_get_height( parent );
@@ -153,18 +153,18 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 
 	lv_mem_free(txt);
 
-	static const char * const btnm_map[] = {
+	static const char * const btnmatrix_map[] = {
 		"LV Demo", "LV Sysmon", "LV Benchmark","\n",
 		"Templ", "Template", "Demo", "\n",
 		"Animation", "Table",
 		"",
 	};
 
-	btnm = lv_btnm_create(parent, NULL);
-    lv_btnm_set_map(btnm, (const char**)btnm_map);
-	lv_obj_set_size( btnm, w_par*3/4, h_par/2 );
-    lv_obj_align(btnm, lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
-	lv_obj_set_event_cb(btnm, btnm_event_handler);
+	btnmatrix = lv_btnmatrix_create(parent, NULL);
+    lv_btnmatrix_set_map(btnmatrix, (const char**)btnmatrix_map);
+	lv_obj_set_size( btnmatrix, w_par*3/4, h_par/2 );
+    lv_obj_align(btnmatrix, lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+	lv_obj_set_event_cb(btnmatrix, btnmatrix_event_handler);
 }
 
 /*===================== Callbacks and Events================== */

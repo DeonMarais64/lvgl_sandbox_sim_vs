@@ -1,10 +1,10 @@
 /**
- * @file sndbx_app_monolith.h
+ * @file sndbx_app_.h
  *
  */
 
-#ifndef SNDBX_APP_MONOLITH_H
-#define SNDBX_APP_MONOLITH_H
+#ifndef SNDBX_APP__H
+#define SNDBX_APP__H
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,10 +13,12 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-#ifndef USE_SNDBX_APP_MONOLITH
-#define USE_SNDBX_APP_MONOLITH 1
+#ifndef USE_SNDBX_APP_
+#define USE_SNDBX_APP_ 1
 #endif
-#if USE_SNDBX_APP_MONOLITH
+#if USE_SNDBX_APP_
+
+#include "../src/sndbx.h"
 
 /*********************
  *      DEFINES
@@ -30,19 +32,16 @@ extern "C" {
  * GLOBAL PROTOTYPES
  **********************/
 
-/**
- * Create a sandbox application
- */
-extern void sndbx_app_monolith_test( void );
+extern void sndbx_app_( void );
 
 /**********************
  *      MACROS
  **********************/
 
-#endif /*USE_SNDBX_APP_MONOLITH*/
+#endif /*USE_SNDBX_APP_*/
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* SNDBX_APP_MONOLITH_H */
+#endif /* SNDBX_APP__H */

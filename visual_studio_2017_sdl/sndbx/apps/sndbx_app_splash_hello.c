@@ -60,6 +60,10 @@ static const sndbx_pge_dsc_t dsc_hello_people = {
     .task_period = 500,
 };
 
+static const sndbx_pge_t pge_home = {
+    .dsc = &dsc_hello_world,
+};
+
 /**********************
  *      MACROS
  **********************/
@@ -100,11 +104,7 @@ void splash_task(void* p_mem)
 {
     (void)p_mem;  /* Not used */
 
-    static const sndbx_pge_t pge = {
-        .dsc = &dsc_hello_world,
-    };
-
-    sndbx_app_create(&pge);
+    sndbx_app_create(&pge_home);
 }
 
 void hello_world_create( lv_obj_t * parent, void * p_mem, const void * prms )
@@ -135,11 +135,9 @@ void hello_people_create(lv_obj_t* parent, void* p_mem, const void* prms)
     mem->lbl = lv_label_create(parent, NULL);
     lv_label_set_text(mem->lbl, "");
 
-    static const sndbx_pge_t link_left = {
-        .dsc = &dsc_hello_world,
-    };
+    const sndbx_pge_t * p_link_left = &pge_home;
 
-    lv_obj_t* btn = sndbx_link_btn_create(parent, LV_SYMBOL_LEFT, &link_left);
+    lv_obj_t* btn = sndbx_link_btn_create(parent, LV_SYMBOL_LEFT, p_link_left);
     lv_obj_align(btn, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
 }
 

@@ -43,7 +43,7 @@ static bool info_cb( void * p_mem, lv_event_t evt );
 
 static lv_obj_t * label_create( lv_obj_t * par, const char * txt );
 
-static void btnm_event_handler(lv_obj_t * obj, lv_event_t evt);
+static void btnmatrix_event_handler(lv_obj_t * obj, lv_event_t evt);
 
 /**********************
  *  STATIC VARIABLES
@@ -93,7 +93,7 @@ static const prms_app_pges_t pge_prms[6] = {
 	{.links.left = &app_pages[4], .links.right =          NULL, },
 };
 
-static const char * const btnm_map[] = {
+static const char * const btnmatrix_map[] = {
 #if LV_HOR_RES_MAX < 800
 	"lv Apps",
 	"lv Tutorials", 
@@ -132,9 +132,9 @@ void sndbx_app_monolith_test( void )
 		.dsc = &dsc,
 	};
 
-	lv_theme_t * th;
-	th = lv_theme_default_init( 0, NULL );
-	lv_theme_set_current( th );
+//	lv_theme_t * th;
+//	th = lv_theme_default_init( 0, NULL );
+//	lv_theme_set_current( th );
 	sndbx_app_create( &page );
 }
 
@@ -161,11 +161,11 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
 	lv_obj_t * lbl = label_create(parent, "Please select a page to open");
 	lv_obj_align(lbl, NULL, LV_ALIGN_IN_TOP_MID, 0, LV_DPI / 4);
 
-	lv_obj_t * btnm = lv_btnm_create(parent, NULL);
-	lv_btnm_set_map(btnm, (const char **)btnm_map);
-	lv_obj_set_size(btnm, w_par * 3 / 4, h_par * 3 / 4);
-	lv_obj_align(btnm, lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 6);
-	lv_obj_set_event_cb(btnm, btnm_event_handler);
+	lv_obj_t * btnmatrix = lv_btnmatrix_create(parent, NULL);
+	lv_btnmatrix_set_map(btnmatrix, (const char **)btnmatrix_map);
+	lv_obj_set_size(btnmatrix, w_par * 3 / 4, h_par * 3 / 4);
+	lv_obj_align(btnmatrix, lbl, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 6);
+	lv_obj_set_event_cb(btnmatrix, btnmatrix_event_handler);
 
 	if (pge_prms)
 	{	/* Add links to other pages */
@@ -189,11 +189,11 @@ static void create_cb( lv_obj_t * parent, void * p_mem, const void * prms )
  * @param obj pointer button matrix
  * @param evt event that occurred
  */
-static void btnm_event_handler(lv_obj_t * obj, lv_event_t evt)
+static void btnmatrix_event_handler(lv_obj_t * obj, lv_event_t evt)
 {
 	if (evt != LV_EVENT_CLICKED)
 		return;
-	uint16_t idx = lv_btnm_get_active_btn(obj);
+	uint16_t idx = lv_btnmatrix_get_active_btn(obj);
 	if (idx >= NB_APP_PAGES)
 		return;
 	const sndbx_pge_t *page = &app_pages[idx];
@@ -245,7 +245,7 @@ static bool settings_cb( void * p_mem, lv_event_t evt )
 	lv_obj_set_size( win, w, h );
 
 	/*Add Content*/
-	lv_win_set_layout( win, LV_LAYOUT_PRETTY );
+//	lv_win_set_layout( win, LV_LAYOUT_PRETTY );
 
 	/*Finally, align window to the bottom of the page*/
 	lv_obj_align( win, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0 );
@@ -262,7 +262,7 @@ static void info_event_handler( lv_obj_t * obj, lv_event_t evt )
 {
 	if( evt != LV_EVENT_CLICKED )
 		return;
-	lv_mbox_start_auto_close( obj, 0 );
+	lv_msgbox_start_auto_close( obj, 0 );
 
 	sndbx_info_btn_enable_set( true );
 }
@@ -278,23 +278,23 @@ static bool info_cb( void * p_mem, lv_event_t evt )
 
 	MEM_INIT( mem, p_mem );
 
-	lv_obj_t * mbox = lv_mbox_create( mem->parent, NULL );
-	lv_obj_set_drag( mbox, true );
+	lv_obj_t * msgbox = lv_msgbox_create( mem->parent, NULL );
+	lv_obj_set_drag( msgbox, true );
 	char txt[128]; 
 	snprintf(txt, 128, 
 		"LittlevGL Version : %d.%d.%d %s\n",
 		LVGL_VERSION_MAJOR,LVGL_VERSION_MINOR,LVGL_VERSION_PATCH,LVGL_VERSION_INFO
 	);
 
-	lv_mbox_set_text( mbox, 
+	lv_msgbox_set_text( msgbox, 
 //		"Template page info message box\n"
 //		"Some information here\n"
 		txt
 	);
-	lv_mbox_add_btns( mbox, (const char **)btn_map_ok);
-	lv_obj_align( mbox, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0 );
-	lv_obj_set_event_cb( mbox, info_event_handler );
-	lv_obj_set_user_data( mbox, p_mem );	/*Not really needed in this case ...*/
+	lv_msgbox_add_btns( msgbox, (const char **)btn_map_ok);
+	lv_obj_align( msgbox, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0 );
+	lv_obj_set_event_cb( msgbox, info_event_handler );
+	lv_obj_set_user_data( msgbox, p_mem );	/*Not really needed in this case ...*/
 											/*..but recomended in case used ... */
 											/*.. by the message box event */
 	return true;
@@ -310,7 +310,7 @@ static void help_event_handler( lv_obj_t * obj, lv_event_t evt )
 {
 	if( evt != LV_EVENT_CLICKED )
 		return;
-	lv_mbox_start_auto_close( obj, 0 );
+	lv_msgbox_start_auto_close( obj, 0 );
 
 	sndbx_help_btn_enable_set( true );
 }
@@ -326,18 +326,18 @@ static bool help_cb( void * p_mem, lv_event_t evt )
 
 	MEM_INIT( mem, p_mem );
 
-	lv_obj_t * mbox = lv_mbox_create( mem->parent, NULL );
-	lv_obj_set_drag( mbox, true );
-	lv_mbox_set_text( mbox,
+	lv_obj_t * msgbox = lv_msgbox_create( mem->parent, NULL );
+	lv_obj_set_drag( msgbox, true );
+	lv_msgbox_set_text( msgbox,
 		"Template page help message box\n" 
 		"Some help here\n"
 	);
-	lv_mbox_add_btns( mbox, (const char **)btn_map_ok );
-	lv_obj_align( mbox, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 0 );
+	lv_msgbox_add_btns( msgbox, (const char **)btn_map_ok );
+	lv_obj_align( msgbox, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 0 );
 
-	lv_obj_set_event_cb( mbox, help_event_handler );
+	lv_obj_set_event_cb( msgbox, help_event_handler );
 	
-	lv_obj_set_user_data(mbox, p_mem);		/*Not really needed in this case ...*/
+	lv_obj_set_user_data(msgbox, p_mem);		/*Not really needed in this case ...*/
 											/*..but recomended in case used ... */
 											/*.. by the message box event */
 	return true;
