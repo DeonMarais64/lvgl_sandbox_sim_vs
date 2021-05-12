@@ -1,4 +1,4 @@
-# LittlevGL Sandbox - PC Simulator using Visual Studio 2017/2019
+# LVGL Sandbox - PC Simulator using Visual Studio 2017/2019
 
 This is a pre-configured Visual Studio project to try LGL on a Windows PC. The project uses the [SDL](https://www.libsdl.org/) library which is copied and linked to the project, so you can compile it without any extra dependencies. The 64 bit libraries are used so it will work out-of-the-box on 64-bit systems.
 
